@@ -1,6 +1,6 @@
 // Unknown flags should result in an error
 
-use rust_hls::hls;
+use rust_hls_macro::hls;
 
 #[hls(unknown_flag = "something")]
 pub mod adder_module {

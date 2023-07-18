@@ -1,4 +1,4 @@
-use rust_hls::hls;
+use rust_hls_macro::hls;
 
 #[hls]
 pub mod adder_module {

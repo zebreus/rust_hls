@@ -1,7 +1,7 @@
 use std::io;
 
 use crate::generated_file::generate_output_filename;
-use crate::rust_hls::CrateFile;
+use rust_hls_executor::CrateFile;
 
 use extract_rust_hdl_interface::Direction;
 use extract_rust_hdl_interface::{RustHdlModule, SignalType};

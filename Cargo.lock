@@ -1185,8 +1185,10 @@ dependencies = [
  "quote 1.0.31",
  "rand",
  "regex",
+ "rust_hls_executor",
  "rust_hls_macro",
  "rust_hls_macro_lib",
+ "rust_hls_script_generator",
  "serde",
  "spanned_error_message",
  "syn 2.0.26",
@@ -1206,6 +1208,22 @@ dependencies = [
  "rust_hls",
  "rust_hls_macro",
  "verilated",
+]
+
+[[package]]
+name = "rust_hls_executor"
+version = "0.2.0"
+dependencies = [
+ "cargo_toml",
+ "directories",
+ "fs_extra",
+ "fslock",
+ "rand",
+ "rust_hls_macro_lib",
+ "rust_hls_script_generator",
+ "serde",
+ "thiserror",
+ "toml",
 ]
 
 [[package]]
@@ -1235,6 +1253,15 @@ dependencies = [
  "quote 1.0.31",
  "syn 2.0.26",
  "thiserror",
+]
+
+[[package]]
+name = "rust_hls_script_generator"
+version = "0.2.0"
+dependencies = [
+ "fs_extra",
+ "rust_hls_macro_lib",
+ "tempfile",
 ]
 
 [[package]]

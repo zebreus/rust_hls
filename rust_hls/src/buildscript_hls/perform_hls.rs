@@ -6,9 +6,8 @@ use crate::{
         generate_file, generate_output_filename, generate_output_module_path, ExtractHashError,
         ExtractModulePathError, GenerateRustHdlStructError,
     },
-    rust_hls::CrateFile,
-    RustHlsError,
 };
+use rust_hls_executor::{CrateFile, RustHlsError};
 
 use super::{find_modules::MacroModule, process_module::ProcessModuleError};
 

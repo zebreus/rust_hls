@@ -61,7 +61,7 @@ pub struct GenerateRustHdlStructResult {
     pub rust_file: syn::File,
 
     #[cfg(feature = "verilator")]
-    pub cpp_shim: crate::rust_hls::CrateFile,
+    pub cpp_shim: rust_hls_executor::CrateFile,
 }
 
 #[cfg(feature = "verilator")]

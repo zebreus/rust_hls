@@ -1,5 +1,5 @@
 // Check that the rust_flags and the hls_flags arguments are supported
-use rust_hls::hls;
+use rust_hls_macro::hls;
 
 #[hls(rust_flags = "")]
 pub mod adder1 {

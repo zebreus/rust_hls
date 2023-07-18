@@ -8,7 +8,7 @@ use serde::Serialize;
 
 use thiserror::Error;
 
-use crate::rust_hls::CrateFile;
+use rust_hls_executor::CrateFile;
 
 #[derive(Error, Debug)]
 pub enum GenerateCargoTomlFromManifestError {

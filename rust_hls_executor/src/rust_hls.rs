@@ -132,7 +132,7 @@ impl RustHls {
         // Generate new random package name to avoid conflicts
         let cargo_toml_content = fs::read(working_directory.join("Cargo.toml"))?;
         let mut manifest = Manifest::from_slice(cargo_toml_content.as_slice())?;
-        let Some(package) = manifest.package.as_mut() else  {
+        let Some(package) = manifest.package.as_mut() else {
             return Err(RustHlsError::FailedToGetPackageName);
         };
         let mut new_name: String = working_directory
@@ -220,7 +220,7 @@ impl RustHls {
 mod tests {
     use rust_hls_macro_lib::HlsArguments;
 
-    use crate::generate_hls_script::{generate_hls_script, GenerateHlsOptions};
+    use rust_hls_script_generator::{generate_hls_script, GenerateHlsOptions};
 
     use super::*;
 
@@ -239,7 +239,7 @@ mod tests {
                 [package]
                 name = "test_crate"
                 version = "0.1.0"
-                
+
                 "#,
                 ),
             },

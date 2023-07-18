@@ -199,6 +199,7 @@ fn extract_module_from_item(
             let cargo_toml_str = std::fs::read_to_string(crate_root.join("Cargo.toml")).unwrap_or(
                 r#"[package]
 name = "temporary"
+version = "0.0.1"
 edition = "2021""#
                     .into(),
             );

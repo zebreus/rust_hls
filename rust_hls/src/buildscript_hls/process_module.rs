@@ -1,12 +1,8 @@
 use std::path::PathBuf;
 
-use crate::{
-    calculate_hash,
-    darling_error_outside_macro::DarlingErrorOutsideMacro,
-    generate_hls_script::{generate_hls_script, GenerateHlsOptions},
-    rust_hls::CrateFile,
-    RustHls,
-};
+use crate::darling_error_outside_macro::DarlingErrorOutsideMacro;
+use rust_hls_executor::{calculate_hash, CrateFile, RustHls};
+use rust_hls_script_generator::{generate_hls_script, GenerateHlsOptions};
 
 use super::find_modules::MacroModule;
 use rust_hls_macro_lib::{parse_hls_macro_module, HlsArguments};

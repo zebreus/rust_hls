@@ -1,5 +1,5 @@
 /// Functions for generating and parsing output files
-use crate::rust_hls::CrateFile;
+use rust_hls_executor::CrateFile;
 use std::path::PathBuf;
 
 use regex::Regex;

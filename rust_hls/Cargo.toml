@@ -50,6 +50,7 @@ extract_rust_hdl_interface.workspace = true
 rust_hls_macro_lib.workspace = true
 spanned_error_message.workspace = true
 darling = "0.20.1"
+rust_hls_script_generator.workspace = true
 
 verilated = { path = "/home/lennart/Documents/verilated-rs/verilated", version = "0.1.0", optional = true }
 verilated-module = { path = "/home/lennart/Documents/verilated-rs/verilated-module", version = "0.1.0", optional = true }
@@ -57,6 +58,7 @@ verilator = { path = "/home/lennart/Documents/verilated-rs/verilator", features 
     "gen",
     "module",
 ], version = "0.1.0", optional = true }
+rust_hls_executor.workspace = true
 
 [dev-dependencies]
 rust_hls_macro.workspace = true
