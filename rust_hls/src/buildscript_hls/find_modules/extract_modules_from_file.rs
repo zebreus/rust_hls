@@ -14,6 +14,7 @@ use crate::{
         ExtractModulePathError,
     },
 };
+use serde::Serialize;
 
 #[derive(Error, Debug)]
 pub enum ExtractModuleError {
@@ -29,6 +30,10 @@ pub enum ExtractModuleError {
     FailedToParseFile { error: DarlingErrorOutsideMacro },
     #[error("You can not use the rust_hls macro on a module import ({file} {module})")]
     RustHlsMacroOnModuleImport { file: String, module: String },
+    #[error(transparent)]
+    CargoTomlError(#[from] cargo_toml::Error),
+    #[error(transparent)]
+    FailedToSerializeCargoToml(#[from] toml::ser::Error),
 }
 
 /// Parse a file at a path into a syn AST
@@ -161,7 +166,9 @@ fn extract_module_from_item(
             let Some(rust_hls_arguments) = rust_hls_options else {
                 // Could not find a rust-hls macro
                 let thing: Result<Vec<MacroModule>, ExtractModuleError> = match module.content {
-                    Some((_, items)) => extract_hls_modules(items, crate_root, file, &current_module_path),
+                    Some((_, items)) => {
+                        extract_hls_modules(items, crate_root, file, &current_module_path)
+                    }
                     None => Ok(Vec::new()),
                 };
                 return thing;
@@ -171,7 +178,7 @@ fn extract_module_from_item(
                 return Err(ExtractModuleError::RustHlsMacroOnModuleImport {
                     module: current_module_path.iter().join("::"),
                     file: file.to_string_lossy().to_string(),
-                })
+                });
             };
 
             let module_file = syn::File {
@@ -189,12 +196,19 @@ fn extract_module_from_item(
                 Err(_) => None,
             };
 
-            let cargo_toml = std::fs::read_to_string(crate_root.join("Cargo.toml")).unwrap_or(
+            let cargo_toml_str = std::fs::read_to_string(crate_root.join("Cargo.toml")).unwrap_or(
                 r#"[package]
 name = "temporary"
 edition = "2021""#
                     .into(),
             );
+
+            let mut manifest = cargo_toml::Manifest::from_str(&cargo_toml_str)?;
+            manifest.complete_from_path(&crate_root.join("Cargo.toml"))?;
+            let mut buffer = String::new();
+            let serializer = toml::Serializer::new(&mut buffer);
+            manifest.serialize(serializer)?;
+            let cargo_toml_str = buffer;
 
             let result: Result<Vec<MacroModule>, ExtractModuleError> = Ok(vec![MacroModule {
                 module_content_string: prettyplease::unparse(&module_file),
@@ -205,7 +219,7 @@ edition = "2021""#
                 absolute_module_path: input_module_path,
                 hls_arguments: rust_hls_arguments,
                 module_type: ModuleType::Inline,
-                cargo_toml: cargo_toml,
+                cargo_toml: cargo_toml_str,
                 previous_hash,
                 output_file,
             }]);
@@ -230,7 +244,7 @@ pub fn extract_hls_modules(
             modules
         })
         .try_fold(Vec::new(), |mut acc, f| {
-            let Ok(macro_modules) = f else {return f};
+            let Ok(macro_modules) = f else { return f };
             acc.extend(macro_modules.into_iter());
             Ok(acc)
         })
