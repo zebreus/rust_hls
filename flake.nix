@@ -46,6 +46,41 @@
               jq
             ];
           };
+        packages.rust-hls-container = pkgs.dockerTools.buildLayeredImage
+          {
+            name = "zebreus/rust_hls_tools";
+            tag = "latest";
+            contents = [
+              # bambu
+              pkgs.bambu
+              # c compiler
+              pkgs.stdenv.cc
+              # other tools for rust_hls
+              old-pkgs.verilator
+              pkgs.llvmPackages_16.libllvm # Required for rust-hls-lib
+              pkgs.jq
+              # make the container usable interactivly
+              pkgs.nix
+              pkgs.bashInteractive
+              pkgs.coreutils-full
+              pkgs.gnutar
+              pkgs.gzip
+              pkgs.gnugrep
+              pkgs.which
+              pkgs.curl
+              pkgs.less
+              pkgs.wget
+              pkgs.man
+              pkgs.cacert.out
+              pkgs.findutils
+            ];
+            config = {
+              Cmd = [
+                "${pkgs.lib.getExe pkgs.bambu}"
+              ];
+              WorkingDir = "/src";
+            };
+          };
       }
     );
 }

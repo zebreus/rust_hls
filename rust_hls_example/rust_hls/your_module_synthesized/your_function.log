@@ -1,34 +1,71 @@
 ++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
-+ CRATE_NAME=eebedabeeadabboSHnWda
-++ echo eebedabeeadabboSHnWda
++ CRATE_NAME=daffeaaedabEiMNKGut
+++ echo daffeaaedabEiMNKGut
 ++ tr - _
-+ CRATE_NAME_UNDERSCORED=eebedabeeadabboSHnWda
++ CRATE_NAME_UNDERSCORED=daffeaaedabEiMNKGut
 ++ pwd
-+ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/8e1e8893be493da95be0eada24416bb6-63oS7HnWda'
-Executing synthesis in /home/lennart/.cache/rust-hls/8e1e8893be493da95be0eada24416bb6-63oS7HnWda
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut'
+Executing synthesis in /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut
++++ cargo locate-project --message-format plain --workspace
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+++ dirname /home/lennart/.cache/rust-hls/Cargo.toml
++ WORKSPACE_LOCATION=/home/lennart/.cache/rust-hls
 + export 'RUSTFLAGS=--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
 + RUSTFLAGS='--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
-+ LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
++ LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
 ++ cargo build --release -Z unstable-options --build-plan
-++ jq '.invocations[].outputs[]' -r
 ++ grep -Po '^.*\.rlib$'
 ++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
 ++ tr -d '\n'
++++ pwd
++++ pwd
++++ pwd
++++ id -u
++++ id -g
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
 + cargo build --release -Z unstable-options
-   Compiling eebedabeeadabboSHnWda v1.0.0 (/home/lennart/.cache/rust-hls/8e1e8893be493da95be0eada24416bb6-63oS7HnWda)
-warning: crate `eebedabeeadabboSHnWda` should have a snake case name
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+   Compiling daffeaaedabEiMNKGut v1.0.0 (/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut)
+warning: crate `daffeaaedabEiMNKGut` should have a snake case name
   |
-  = help: convert the identifier to snake case: `eebedabeeadabbo_shn_wda`
+  = help: convert the identifier to snake case: `daffeaaedab_ei_mnkgut`
   = note: `#[warn(non_snake_case)]` on by default
 
-warning: `eebedabeeadabboSHnWda` (lib) generated 1 warning
-    Finished release [optimized] target(s) in 0.05s
-+ llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/eebedabeeadabboSHnWda-f10cc9c9bbd94c8c.bc
-+ llvm-dis --opaque-pointers=false -o result.ll
-+ llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=your_function
+warning: `daffeaaedabEiMNKGut` (lib) generated 1 warning
+    Finished release [optimized] target(s) in 0.03s
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -u
+++ id -u
+++ id -g
+++ id -g
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/daffeaaedabEiMNKGut-37b0e5e28fc939d2.bc
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=your_function
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
 + cp result.ll your_function.ll
-+ bambu --simulator=VERILATOR result.ll --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16
- ==  Bambu executed with: /nix/store/9c5lz0md936sjhs9hw1ya6kghvkfc4zg-bambu-wrapped/bin/bambu --simulator=VERILATOR --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16 result.ll 
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16
+ ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16 result.ll 
 
 
 ********************************************************************************
@@ -70,7 +107,7 @@ Target technology = FPGA
   Module allocation information for function your_function:
     Number of complex operations: 1
     Number of complex operations: 1
-  Time to perform module allocation: 0.00 seconds
+  Time to perform module allocation: 0.01 seconds
 
 
   Scheduling Information of function your_function:

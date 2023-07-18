@@ -6,11 +6,11 @@ target triple = "x86_64-unknown-linux-gnu"
 ; Function Attrs: mustprogress nofree norecurse nosync nounwind nonlazybind willreturn memory(none)
 define noundef i32 @your_function(i32 noundef %a, i32 noundef %b) unnamed_addr #0 {
 start:
-  %0 = mul i32 %b, %a
-  ret i32 %0
+  %_0 = mul i32 %b, %a
+  ret i32 %_0
 }
 
-attributes #0 = { mustprogress nofree norecurse nosync nounwind nonlazybind willreturn memory(none) "probe-stack"="__rust_probestack" "target-cpu"="generic" }
+attributes #0 = { mustprogress nofree norecurse nosync nounwind nonlazybind willreturn memory(none) "probe-stack"="inline-asm" "target-cpu"="generic" }
 
 !llvm.module.flags = !{!0, !1}
 
