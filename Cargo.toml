@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = [
+    "rust_hls",
+    "rust_hls_macro",
+    "rust_hls_macro_lib",
+    "spanned_error_message",
+    "rust_hls_example",
+    "extract_rust_hdl_interface",
+    "wrap_verilog_in_rust_hdl_macro",
+]
+exclude = ["*/test_suites/*", "*/target/*"]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["zebreus <lennarteichhorn@googlemail.com>"]
+repository = "https://github.com/zebreus/rust_hls"
+
+[workspace.dependencies]
+rust_hls = { path = "rust_hls", version = "0.2.0" }
+rust_hls_macro = { path = "rust_hls_macro", version = "0.2.0" }
+rust_hls_macro_lib = { path = "rust_hls_macro_lib", version = "0.2.0" }
+spanned_error_message = { path = "spanned_error_message", version = "0.1.0" }
+wrap_verilog_in_rust_hdl_macro = { path = "wrap_verilog_in_rust_hdl_macro", version = "0.2.0" }
+extract_rust_hdl_interface = { path = "extract_rust_hdl_interface", version = "0.2.0" }

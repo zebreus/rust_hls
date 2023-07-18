@@ -1,11 +1,16 @@
 [package]
 name = "rust_hls_example"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
 
 [dependencies]
 rust-hdl = "0.45.1"
-rust_hls_macro = { path = "../rust_hls_macro", version = "0.2.0" }
+rust_hls_macro.workspace = true
 verilated = { path = "/home/lennart/Documents/verilated-rs/verilated", version = "0.1.0" }
+
 [build-dependencies]
-rust_hls = { path = "../rust_hls", features = ["verilator"], version = "0.2.0" }
+rust_hls = { workspace = true, features = ["verilator"] }

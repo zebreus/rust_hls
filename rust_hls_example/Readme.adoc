@@ -1,2 +1,0 @@
-= Example for using rust_hls
-
