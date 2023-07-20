@@ -4,7 +4,7 @@ use rust_hdl::prelude::*;
 pub mod your_module {
     #[hls(include_logs, include_llvm_ir)]
     pub extern "C" fn your_function(a: u32, b: u32) -> u32 {
-        a * b
+        a * b + a
     }
 }
 
@@ -26,6 +26,9 @@ mod tests {
         adder.connect_all();
 
         let mut simulation = Simulation::new();
+        simulation.add_clock(1, |counter: &mut Box<YourFunction>| {
+            counter.clk.next = !counter.clk.val()
+        });
 
         simulation.add_testbench(move |mut sim: Sim<YourFunction>| {
             let mut adder = sim.init()?;

@@ -6,7 +6,8 @@ target triple = "x86_64-unknown-linux-gnu"
 ; Function Attrs: mustprogress nofree norecurse nosync nounwind nonlazybind willreturn memory(none)
 define noundef i32 @your_function(i32 noundef %a, i32 noundef %b) unnamed_addr #0 {
 start:
-  %_0 = mul i32 %b, %a
+  %a1 = add i32 %b, 1
+  %_0 = mul i32 %a1, %a
   ret i32 %_0
 }
 

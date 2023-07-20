@@ -1,11 +1,11 @@
 ++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
-+ CRATE_NAME=daffeaaedabEiMNKGut
-++ echo daffeaaedabEiMNKGut
++ CRATE_NAME=aebadcffafadfdfefNNijWDtA
+++ echo aebadcffafadfdfefNNijWDtA
 ++ tr - _
-+ CRATE_NAME_UNDERSCORED=daffeaaedabEiMNKGut
++ CRATE_NAME_UNDERSCORED=aebadcffafadfdfefNNijWDtA
 ++ pwd
-+ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut'
-Executing synthesis in /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5'
+Executing synthesis in /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5
 +++ cargo locate-project --message-format plain --workspace
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
@@ -24,7 +24,7 @@ note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in th
 +++ pwd
 +++ id -u
 +++ id -g
-++ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5:/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
 note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
@@ -32,13 +32,13 @@ note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in th
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
 note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
-   Compiling daffeaaedabEiMNKGut v1.0.0 (/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut)
-warning: crate `daffeaaedabEiMNKGut` should have a snake case name
+   Compiling aebadcffafadfdfefNNijWDtA v1.0.0 (/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5)
+warning: crate `aebadcffafadfdfefNNijWDtA` should have a snake case name
   |
-  = help: convert the identifier to snake case: `daffeaaedab_ei_mnkgut`
+  = help: convert the identifier to snake case: `aebadcffafadfdfef_nnij_wdt_a`
   = note: `#[warn(non_snake_case)]` on by default
 
-warning: `daffeaaedabEiMNKGut` (lib) generated 1 warning
+warning: `aebadcffafadfdfefNNijWDtA` (lib) generated 1 warning
     Finished release [optimized] target(s) in 0.03s
 ++ pwd
 ++ pwd
@@ -55,16 +55,16 @@ warning: `daffeaaedabEiMNKGut` (lib) generated 1 warning
 ++ id -g
 ++ id -g
 ++ id -g
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/daffeaaedabEiMNKGut-37b0e5e28fc939d2.bc
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=your_function
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5:/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=your_function
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5:/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5:/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/aebadcffafadfdfefNNijWDtA-625fc9e57a62e573.bc
 + cp result.ll your_function.ll
 ++ pwd
 ++ pwd
 ++ pwd
 ++ id -u
 ++ id -g
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut:/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/61d60a46ff0617eaa80e10da4b91117-EiMNKG40ut --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5:/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/aeb6adcff29a8f409adf94d48fe1061f-NN8ijWDtA5 --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16
  ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=your_function --clock-name=clk --compiler=I386_CLANG16 result.ll 
 
 
@@ -111,42 +111,45 @@ Target technology = FPGA
 
 
   Scheduling Information of function your_function:
-    Number of control steps: 3
+    Number of control steps: 4
     Minimum slack: 1.006399999000001
     Estimated max frequency (MHz): 111.19017967096713
   Time to perform scheduling: 0.00 seconds
 
 
   State Transition Graph Information of function your_function:
-    Number of states: 1
-    Minimum number of cycles: 1
-    Maximum number of cycles 1
+    Number of states: 2
+    Minimum number of cycles: 2
+    Maximum number of cycles 2
+    Done port is registered
   Time to perform creation of STG: 0.00 seconds
 
 
   Easy binding information for function your_function:
-    Bound operations:4/4
+    Bound operations:5/5
   Time to perform easy binding: 0.00 seconds
 
 
   Storage Value Information of function your_function:
-    Number of storage values inserted: 0
+    Number of storage values inserted: 1
   Time to compute storage value information: 0.00 seconds
 
 
   Module binding information for function your_function:
-    Number of modules instantiated: 4
+    Number of modules instantiated: 5
     Number of performance conflicts: 0
-    Estimated resources area (no Muxes and address logic): 17
+    Estimated resources area (no Muxes and address logic): 34
     Estimated area of MUX21: 0
-    Total estimated area: 17
+    Total estimated area: 34
     Estimated number of DSPs: 3
   Time to perform module binding: 0.00 seconds
 
 
   Register binding information for function your_function:
-    Register allocation algorithm obtains an optimal result: 0 registers
+    Register allocation algorithm obtains an optimal result: 1 registers
   Time to perform register binding: 0.00 seconds
 
-  Total number of flip-flops in function your_function: 0
+  Total number of flip-flops in function your_function: 32
+  All registers are without enable: function pipelining may come for free
+  Resources are not shared in function your_function: function pipelining may come for free
 + mv your_function.v result.v
