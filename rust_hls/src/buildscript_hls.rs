@@ -6,10 +6,10 @@ mod find_modules;
 use find_modules::*;
 mod perform_hls;
 
-#[cfg(feature = "verilator")]
-mod generate_verilator_shim;
-#[cfg(feature = "verilator")]
-pub use generate_verilator_shim::*;
+// #[cfg(feature = "verilator")]
+// mod generate_verilator_shim;
+// #[cfg(feature = "verilator")]
+// pub use generate_verilator_shim::*;
 
 use thiserror::Error;
 

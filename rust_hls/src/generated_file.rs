@@ -1,4 +1,4 @@
-/// Functions for generating and parsing output files
+//! Functions for generating and parsing output files
 use rust_hls_executor::CrateFile;
 use std::path::PathBuf;
 
@@ -24,6 +24,42 @@ pub fn generate_output_module_path(source_module_path: &Vec<String>) -> Vec<Stri
     let last_module = synthesized_module_path.pop().unwrap_or("lib".into());
     synthesized_module_path.push(rust_hls_macro_lib::synthesized_module_name(&last_module));
     return synthesized_module_path;
+}
+
+pub fn generate_verilator_output_path(source_module_path: &Vec<String>) -> PathBuf {
+    let synthesized_module_path = generate_output_module_path(source_module_path);
+    let file_path = format!("rust_hls/{}", synthesized_module_path.join("/"));
+    return PathBuf::from(file_path);
+}
+
+pub fn generate_verilated_cpp_file_path(
+    source_module_path: &Vec<String>,
+    function_name: &str,
+) -> PathBuf {
+    let base_path = generate_verilator_output_path(source_module_path);
+    let file_path = base_path.join(format!("{}.cpp", function_name));
+    return PathBuf::from(file_path);
+}
+
+pub fn generate_llvm_file_path(source_module_path: &Vec<String>, function_name: &str) -> PathBuf {
+    let base_path = generate_verilator_output_path(source_module_path);
+    let file_path = base_path.join(format!("{}.ll", function_name));
+    return PathBuf::from(file_path);
+}
+
+pub fn generate_log_file_path(source_module_path: &Vec<String>, function_name: &str) -> PathBuf {
+    let base_path = generate_verilator_output_path(source_module_path);
+    let file_path = base_path.join(format!("{}.log", function_name));
+    return PathBuf::from(file_path);
+}
+
+pub fn generate_verilog_file_path(
+    source_module_path: &Vec<String>,
+    function_name: &str,
+) -> PathBuf {
+    let base_path = generate_verilator_output_path(source_module_path);
+    let file_path = base_path.join(format!("{}.v", function_name));
+    return PathBuf::from(file_path);
 }
 
 fn generate_hash_comment(hash: &str) -> String {

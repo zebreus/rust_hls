@@ -3,7 +3,8 @@ use std::path::PathBuf;
 use crate::{
     buildscript_hls::process_module::process_module,
     generated_file::{
-        generate_file, generate_output_filename, generate_output_module_path, ExtractHashError,
+        generate_file, generate_llvm_file_path, generate_log_file_path, generate_output_filename,
+        generate_verilated_cpp_file_path, generate_verilog_file_path, ExtractHashError,
         ExtractModulePathError, GenerateRustHdlStructError,
     },
 };
@@ -102,42 +103,6 @@ impl PerformHlsResult {
             } => &verilated_cpp_file.path,
         }
     }
-}
-
-pub fn generate_verilator_output_path(source_module_path: &Vec<String>) -> PathBuf {
-    let synthesized_module_path = generate_output_module_path(source_module_path);
-    let file_path = format!("rust_hls/{}", synthesized_module_path.join("/"));
-    return PathBuf::from(file_path);
-}
-
-pub fn generate_verilated_cpp_file_path(
-    source_module_path: &Vec<String>,
-    function_name: &str,
-) -> PathBuf {
-    let base_path = generate_verilator_output_path(source_module_path);
-    let file_path = base_path.join(format!("{}.cpp", function_name));
-    return PathBuf::from(file_path);
-}
-
-pub fn generate_llvm_file_path(source_module_path: &Vec<String>, function_name: &str) -> PathBuf {
-    let base_path = generate_verilator_output_path(source_module_path);
-    let file_path = base_path.join(format!("{}.ll", function_name));
-    return PathBuf::from(file_path);
-}
-
-pub fn generate_log_file_path(source_module_path: &Vec<String>, function_name: &str) -> PathBuf {
-    let base_path = generate_verilator_output_path(source_module_path);
-    let file_path = base_path.join(format!("{}.log", function_name));
-    return PathBuf::from(file_path);
-}
-
-pub fn generate_verilog_file_path(
-    source_module_path: &Vec<String>,
-    function_name: &str,
-) -> PathBuf {
-    let base_path = generate_verilator_output_path(source_module_path);
-    let file_path = base_path.join(format!("{}.v", function_name));
-    return PathBuf::from(file_path);
 }
 
 pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsError> {

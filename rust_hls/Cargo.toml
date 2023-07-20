@@ -59,6 +59,7 @@ verilator = { path = "/home/lennart/Documents/verilated-rs/verilator", features 
     "module",
 ], version = "0.1.0", optional = true }
 rust_hls_executor.workspace = true
+rust_hls_verilator_shim.workspace = true
 
 [dev-dependencies]
 rust_hls_macro.workspace = true

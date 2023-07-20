@@ -3,10 +3,14 @@ use extract_rust_hdl_interface::{extract_rust_hdl_interface, Direction, SignalTy
 use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
+use rust_hls_executor::CrateFile;
+use rust_hls_verilator_shim::generate_verilator_shim_from_rusthdl_module;
 use thiserror::Error;
 
-#[cfg(feature = "verilator")]
-use crate::buildscript_hls::generate_verilator_shims_from_rusthdl_module;
+use super::generate_verilated_cpp_file_path;
+
+// #[cfg(feature = "verilator")]
+// use crate::buildscript_hls::generate_verilator_shims_from_rusthdl_module;
 
 #[derive(Error, Debug)]
 pub enum GenerateRustHdlStructError {
@@ -18,7 +22,7 @@ pub enum GenerateRustHdlStructError {
     GeneratingTheRustHdlStructFailed(#[from] syn::Error),
     #[cfg(feature = "verilator")]
     #[error(transparent)]
-    GeneratingVerilatorShimFailed(#[from] crate::buildscript_hls::GenerateVerilatorShimError),
+    GeneratingVerilatorShimFailed(#[from] rust_hls_verilator_shim::GenerateVerilatorShimError),
 }
 
 struct SignalTokens {
@@ -174,7 +178,7 @@ pub fn generate_rust_hdl_struct(
     function_name: &str,
     struct_name: &str,
     parameter_names: &Vec<String>,
-    #[allow(unused_variables)] source_module_path: &Vec<String>,
+    source_module_path: &Vec<String>,
 ) -> Result<GenerateRustHdlStructResult, GenerateRustHdlStructError> {
     // Parse the verilog file
     let mut parsed_module = extract_rust_hdl_interface(&verilog, &function_name).or(Err(
@@ -187,11 +191,8 @@ pub fn generate_rust_hdl_struct(
     parsed_module.name = struct_name.to_string();
 
     #[cfg(feature = "verilator")]
-    let verilator_shim = generate_verilator_shims_from_rusthdl_module(
-        &parsed_module,
-        function_name,
-        source_module_path,
-    )?;
+    let verilator_shim =
+        generate_verilator_shim_from_rusthdl_module(&parsed_module, function_name)?;
 
     #[cfg(feature = "verilator")]
     let verilated_module = {
@@ -378,9 +379,14 @@ pub fn generate_rust_hdl_struct(
         }
     ))?;
 
+    let cpp_path = generate_verilated_cpp_file_path(source_module_path, function_name);
+
     return Ok(GenerateRustHdlStructResult {
         rust_file: token_stream,
         #[cfg(feature = "verilator")]
-        cpp_shim: verilator_shim.cpp,
+        cpp_shim: CrateFile {
+            path: cpp_path,
+            content: verilator_shim.cpp,
+        },
     });
 }

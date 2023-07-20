@@ -1,3 +1,5 @@
+//! Functions for converting between rust module paths and file paths.
+
 use itertools::Itertools;
 use std::path::{Component, PathBuf};
 use thiserror::Error;
@@ -29,7 +31,7 @@ fn filename_only_to_module_path(filename: &PathBuf) -> Result<Vec<String>, Extra
     let mut components = filename.components();
     let Some(Component::Normal(src_component)) = components.next() else {
         return Err(ExtractModulePathError::ExpectedPathToStartWithSrc {
-            filename: filename.to_string_lossy().to_string()
+            filename: filename.to_string_lossy().to_string(),
         });
     };
     if src_component.to_string_lossy().to_string() != "src" {
@@ -50,14 +52,14 @@ fn filename_only_to_module_path(filename: &PathBuf) -> Result<Vec<String>, Extra
 
     let last_part = remaining_components.pop().unwrap_or(String::from(""));
     let Some(last_part) = last_part.strip_suffix(".rs") else {
-            return Err(ExtractModulePathError::PathDoesNotEndWithRs {
-                filename: filename.to_string_lossy().to_string(),
-            });
-        };
+        return Err(ExtractModulePathError::PathDoesNotEndWithRs {
+            filename: filename.to_string_lossy().to_string(),
+        });
+    };
     remaining_components.push(last_part.into());
 
     let Some(first_part) = remaining_components.first().cloned() else {
-       return  Ok(remaining_components);
+        return Ok(remaining_components);
     };
     if first_part == "lib" {
         remaining_components.remove(0);

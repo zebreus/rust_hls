@@ -1189,6 +1189,7 @@ dependencies = [
  "rust_hls_macro",
  "rust_hls_macro_lib",
  "rust_hls_script_generator",
+ "rust_hls_verilator_shim",
  "serde",
  "spanned_error_message",
  "syn 2.0.26",
@@ -1262,6 +1263,20 @@ dependencies = [
  "fs_extra",
  "rust_hls_macro_lib",
  "tempfile",
+]
+
+[[package]]
+name = "rust_hls_verilator_shim"
+version = "0.2.0"
+dependencies = [
+ "extract_rust_hdl_interface",
+ "fnv",
+ "proc-macro2 1.0.66",
+ "quote 1.0.31",
+ "rust_hls_macro",
+ "rust_hls_macro_lib",
+ "syn 2.0.26",
+ "thiserror",
 ]
 
 [[package]]

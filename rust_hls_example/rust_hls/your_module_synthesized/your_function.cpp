@@ -1,33 +1,33 @@
 #include <Vyour_function.h>
 
 extern "C" {
-  // CONSTRUCTORS
-  Vyour_function*
-  your_function_new() {
-    Vyour_function*ptr = new Vyour_function();
+// CONSTRUCTORS
+Vyour_function*
+your_function_new() {
+Vyour_function*ptr = new Vyour_function();
     return ptr;
-  }
+}
 
-  void
-  your_function_delete(Vyour_function* __ptr) {
-    delete __ptr;
-  }
+void
+your_function_delete(Vyour_function* __ptr) {
+delete __ptr;
+}
 
-  // API METHODS
-  void
-  your_function_eval(Vyour_function* __ptr) {
-    __ptr->eval();
-  }
+// API METHODS
+void
+your_function_eval(Vyour_function* __ptr) {
+__ptr->eval();
+}
 
-  void
-  your_function_trace(Vyour_function* __ptr, VerilatedVcdC* __tfp, int __levels) {
-    __ptr->trace(__tfp, __levels);
-  }
+void
+your_function_trace(Vyour_function* __ptr, VerilatedVcdC* __tfp, int __levels) {
+__ptr->trace(__tfp, __levels);
+}
 
-  void
-  your_function_final(Vyour_function* __ptr) {
-    __ptr->final();
-  }
+void
+your_function_final(Vyour_function* __ptr) {
+__ptr->final();
+}
 
   // PORTS
   void

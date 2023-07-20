@@ -1,12 +1,11 @@
-use std::io;
+mod shim_generating_visitor;
 
-use crate::generated_file::generate_output_filename;
-use rust_hls_executor::CrateFile;
+use std::io;
 
 use extract_rust_hdl_interface::Direction;
 use extract_rust_hdl_interface::{RustHdlModule, SignalType};
 use std::panic::catch_unwind;
-use syn::{ForeignItem, ImplItem, ItemMod};
+use syn::{visit, ForeignItem, ImplItem, ItemMod};
 use thiserror::Error;
 
 use proc_macro2::{Ident, Span, TokenStream};
@@ -18,6 +17,8 @@ use rust_hls_macro_lib::synthesized_struct_name;
 pub enum GenerateVerilatorShimError {
     #[error("Failed to generate verilator shim")]
     PanickedWhileGeneratingVerilatorShim(),
+    #[error("Generator did not create exactly one file. Should not happen.")]
+    NotExactlyOneResult(),
     #[error(transparent)]
     FailedWhileGeneratingVerilatorShims(#[from] io::Error),
     #[error(transparent)]
@@ -26,7 +27,7 @@ pub enum GenerateVerilatorShimError {
 
 use syn::visit_mut::VisitMut;
 
-use super::perform_hls::generate_verilator_output_path;
+use self::shim_generating_visitor::ShimGeneratingVisitor;
 
 struct TraceFunctionRemover {}
 
@@ -107,20 +108,17 @@ fn remove_tracing_functions(verilated_module: &mut ItemMod) -> () {
 }
 
 pub struct GeneratedVerilatorShim {
-    pub cpp: CrateFile,
-    pub rust: CrateFile,
+    pub cpp: String,
     pub function_name: String,
     pub module_name: Ident,
     pub struct_name: Ident,
     pub rust_module: ItemMod,
 }
 
-pub fn generate_verilator_shims_from_rusthdl_module(
+pub fn generate_verilator_shim_from_rusthdl_module(
     rust_hdl_module: &RustHdlModule,
     // function name
     function_name: &str,
-    // source module path
-    source_module_path: &Vec<String>,
 ) -> Result<GeneratedVerilatorShim, GenerateVerilatorShimError> {
     let rust_module_name = format!("{}_verilated", function_name);
     let rust_struct_name = synthesized_struct_name(&rust_module_name);
@@ -159,60 +157,36 @@ pub fn generate_verilator_shims_from_rusthdl_module(
     );
 
     let file = syn::parse2::<syn::File>(rust_module)?;
-    let temp_filename = generate_output_filename(source_module_path);
 
-    let module_file = CrateFile {
-        path: temp_filename,
-        content: prettyplease::unparse(&file),
-    };
-
-    generate_verilator_shims(
-        &module_file,
-        function_name,
-        &rust_struct_name,
-        &rust_module_name,
-        source_module_path,
-    )
+    call_verilated_rs_generator(&file, function_name, &rust_struct_name, &rust_module_name)
 }
 
-pub fn generate_verilator_shims(
-    synthesized_module: &CrateFile,
+/// Runs code from verilated-rs to generate a shim.
+///
+/// `dummy_module` is a Rust module that contains a module macro for verilated-rs
+pub fn call_verilated_rs_generator(
+    dummy_module: &syn::File,
     // function name / verilog module name
     function_name: &str,
     // ident of the generated struct
     rust_struct_name: &str,
     // ident of the generated module containing the struct
     rust_module_name: &str,
-    // source module path
-    source_module_path: &Vec<String>,
 ) -> Result<GeneratedVerilatorShim, GenerateVerilatorShimError> {
-    let temp_dir = tempfile::tempdir()?;
-    let temp_dir_path = temp_dir.path().to_path_buf();
-    let mut cloned_file = synthesized_module.clone();
-    let absolute_input_path = temp_dir_path.join(&synthesized_module.path);
-    cloned_file.path = absolute_input_path.clone();
-    cloned_file.write()?;
+    let generated_files = catch_unwind(|| {
+        let mut visitor = ShimGeneratingVisitor::default();
+        visit::visit_file(&mut visitor, dummy_module);
 
-    let output_dir = generate_verilator_output_path(source_module_path);
-    let absolute_output_dir = temp_dir_path.join(&output_dir);
-    std::fs::create_dir_all(&absolute_output_dir)?;
-
-    catch_unwind(|| {
-        let mut module = verilator::module::ModuleGenerator::default();
-
-        module
-            .out_dir(&absolute_output_dir)
-            .generate(&absolute_input_path);
+        visitor.finalize()
     })
     .or_else(|_| Err(GenerateVerilatorShimError::PanickedWhileGeneratingVerilatorShim()))?;
 
-    let cpp_file_path = output_dir.join(&format!("{}.cpp", function_name));
-    let cpp_file_content = std::fs::read_to_string(temp_dir_path.join(&cpp_file_path).as_path())?;
+    let generated_file = generated_files
+        .into_iter()
+        .next()
+        .ok_or(GenerateVerilatorShimError::NotExactlyOneResult {})?;
 
-    let rust_file_path = output_dir.join(&format!("{}.rs", rust_struct_name));
-    let rust_file_content = std::fs::read_to_string(temp_dir_path.join(&rust_file_path).as_path())?;
-
-    let rust_file: syn::File = syn::parse_str(&rust_file_content)?;
+    let rust_file: syn::File = syn::parse_str(&generated_file.rust)?;
     let mut rust_module = syn::ItemMod {
         attrs: rust_file.attrs,
         vis: syn::Visibility::Inherited,
@@ -226,14 +200,7 @@ pub fn generate_verilator_shims(
     remove_tracing_functions(&mut rust_module);
 
     return Ok(GeneratedVerilatorShim {
-        rust: CrateFile {
-            path: rust_file_path,
-            content: rust_file_content,
-        },
-        cpp: CrateFile {
-            path: cpp_file_path,
-            content: cpp_file_content,
-        },
+        cpp: generated_file.cpp,
         function_name: function_name.into(),
         module_name: format_ident!("{}", rust_module_name),
         rust_module: rust_module,
@@ -243,7 +210,6 @@ pub fn generate_verilator_shims(
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
 
     use extract_rust_hdl_interface::extract_rust_hdl_interface;
     use quote::ToTokens;
@@ -252,53 +218,53 @@ mod tests {
 
     #[test]
     fn generating_verilator_shims_does_not_fail() {
-        let input_file = CrateFile {
-            path: PathBuf::from("src/cool_synthesized.rs"),
-            content: r#"#[module(my_counter)]
+        let input_file: syn::File = syn::parse2(quote!(
+            #[module(my_counter)]
             pub struct MyCounterVerilated {
                 #[port(input)]
                 pub clock: bool,
                 #[port(output)]
                 pub led: [bool; 7],
-            }"#
-            .to_string(),
-        };
+            }
+        ))
+        .unwrap();
 
-        generate_verilator_shims(
+        call_verilated_rs_generator(
             &input_file,
             "my_counter",
             "MyCounterVerilated",
             "my_counter_verilated",
-            &vec!["cool_synthesized".to_string()],
         )
         .unwrap();
     }
 
     #[test]
     fn generating_verilator_shims_returns_something_that_looks_correct() {
-        let input_file = CrateFile {
-            path: PathBuf::from("src/cool_synthesized.rs"),
-            content: r#"#[module(my_counter)]
+        let input_file: syn::File = syn::parse2(quote!(
+            #[module(my_counter)]
             pub struct MyCounterVerilated {
                 #[port(input)]
                 pub clock: bool,
                 #[port(output)]
                 pub led: [bool; 7],
-            }"#
-            .to_string(),
-        };
+            }
+        ))
+        .unwrap();
 
-        let result = generate_verilator_shims(
+        let result = call_verilated_rs_generator(
             &input_file,
             "my_counter",
             "MyCounterVerilated",
             "my_counter_verilated",
-            &vec!["cool_synthesized".to_string()],
         )
         .unwrap();
 
-        assert!(result.rust.content.contains("impl MyCounterVerilated {"));
-        assert!(result.cpp.content.contains("#include <Vmy_counter.h>"));
+        assert!(result
+            .rust_module
+            .to_token_stream()
+            .to_string()
+            .contains("impl MyCounterVerilated {"));
+        assert!(result.cpp.contains("#include <Vmy_counter.h>"));
     }
 
     #[test]
@@ -313,15 +279,15 @@ mod tests {
         )
         .unwrap();
 
-        let result = generate_verilator_shims_from_rusthdl_module(
-            &rust_hdl_module,
-            "my_counter",
-            &vec!["cool_synthesized".to_string()],
-        )
-        .unwrap();
+        let result =
+            generate_verilator_shim_from_rusthdl_module(&rust_hdl_module, "my_counter").unwrap();
 
-        assert!(result.rust.content.contains("impl MyCounterVerilated {"));
-        assert!(result.cpp.content.contains("#include <Vmy_counter.h>"));
+        assert!(result
+            .rust_module
+            .to_token_stream()
+            .to_string()
+            .contains("impl MyCounterVerilated {"));
+        assert!(result.cpp.contains("#include <Vmy_counter.h>"));
     }
 
     #[test]
@@ -336,12 +302,8 @@ mod tests {
         )
         .unwrap();
 
-        let result = generate_verilator_shims_from_rusthdl_module(
-            &rust_hdl_module,
-            "my_counter",
-            &vec!["cool_synthesized".to_string()],
-        )
-        .unwrap();
+        let result =
+            generate_verilator_shim_from_rusthdl_module(&rust_hdl_module, "my_counter").unwrap();
 
         let module_string = result.rust_module.into_token_stream().to_string();
 
@@ -360,12 +322,8 @@ mod tests {
         )
         .unwrap();
 
-        let result = generate_verilator_shims_from_rusthdl_module(
-            &rust_hdl_module,
-            "my_counter",
-            &vec!["cool_synthesized".to_string()],
-        )
-        .unwrap();
+        let result =
+            generate_verilator_shim_from_rusthdl_module(&rust_hdl_module, "my_counter").unwrap();
 
         let module_string = result.rust_module.into_token_stream().to_string();
 
