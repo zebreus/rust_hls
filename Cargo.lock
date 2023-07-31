@@ -1266,6 +1266,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust_hls_verilator"
+version = "0.2.0"
+dependencies = [
+ "extract_rust_hdl_interface",
+ "fnv",
+ "proc-macro2 1.0.66",
+ "quote 1.0.31",
+ "rust_hls_executor",
+ "rust_hls_macro_lib",
+ "syn 2.0.26",
+ "tempfile",
+ "thiserror",
+ "verilated",
+ "verilated-module",
+ "verilator",
+]
+
+[[package]]
 name = "rust_hls_verilator_shim"
 version = "0.2.0"
 dependencies = [

@@ -1,0 +1,38 @@
+[package]
+name = "rust_hls_verilator"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage = "https://github.com/zebreus/rust_hls/tree/master/rust_hls_verilator"
+description = "The part of rust_hls that is responsible for running verilator to generated verilated C++ code"
+
+
+[dependencies]
+thiserror = "1.0.40"
+proc-macro2 = { version = "1.0.60", features = ["span-locations"] }
+syn = { version = "2.0.18", features = [
+    "full",
+    "parsing",
+    "extra-traits",
+    "printing",
+    "clone-impls",
+    "derive",
+    "visit",
+    "visit-mut",
+    "fold",
+], default-features = false }
+quote = { version = "1.0.28", default-features = false }
+fnv = "1.0.7"
+rust_hls_macro_lib.workspace = true
+rust_hls_executor.workspace = true
+extract_rust_hdl_interface.workspace = true
+
+verilated = { path = "/home/lennart/Documents/verilated-rs/verilated", version = "0.1.0" }
+verilated-module = { path = "/home/lennart/Documents/verilated-rs/verilated-module", version = "0.1.0" }
+verilator = { path = "/home/lennart/Documents/verilated-rs/verilator", features = [
+    "gen",
+    "module",
+], version = "0.1.0" }
+tempfile = "3.6.0"
