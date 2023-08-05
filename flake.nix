@@ -37,13 +37,13 @@
               fenix.packages.${system}.rust-analyzer
               pkgs.lldb_14
 
-              # For rust_hls
-              # Required commands in path: verilator, bambu, llvm-extract, llvm-link, llvm-dis, jq, grep, sed, tr, export
-              # Also a old version of verilator
-              bambu
-              old-pkgs.verilator
-              llvmPackages_16.libllvm # Required for rust-hls-lib
-              jq
+              # # For rust_hls
+              # # Required commands in path: verilator, bambu, llvm-extract, llvm-link, llvm-dis, jq, grep, sed, tr, export, sh
+              # # Also a old version of verilator
+              # old-pkgs.verilator
+              # llvmPackages_16.libllvm # Required for rust-hls-lib
+              # jq
+              # bambu
             ];
           };
         packages.rust-hls-container = pkgs.dockerTools.buildLayeredImage
