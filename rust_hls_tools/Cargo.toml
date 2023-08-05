@@ -1,0 +1,15 @@
+[package]
+name = "rust_hls_tools"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage = "https://github.com/zebreus/rust_hls/tree/master/rust_hls_tools"
+description = "The part of rust_hls that is responsible for executing external tools like verilator"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+thiserror = "1.0.40"
+docker-command = "5.0.0"

@@ -3,10 +3,10 @@
 // docker run --rm -it zebreus/rust_hls_tools verilator_bin --getenv VERILATOR_ROOT
 
 use rust_hls_executor::CrateFile;
+use rust_hls_tools::{RustHlsCommand, RustHlsCommandError};
 use std::{
     fs::{create_dir_all, read_dir},
     path::PathBuf,
-    process::Command,
 };
 use tempfile::TempDir;
 use thiserror::Error;
@@ -17,6 +17,8 @@ pub enum ObtainVerilatorLibsError {
     VerilatorDidNotExitSuccessfully(),
     #[error(transparent)]
     IoError(#[from] std::io::Error),
+    #[error(transparent)]
+    RustHlsCommandError(#[from] RustHlsCommandError),
 }
 
 pub fn obtain_verilator_libs() -> Result<Vec<CrateFile>, ObtainVerilatorLibsError> {
@@ -34,14 +36,9 @@ pub fn obtain_verilator_libs() -> Result<Vec<CrateFile>, ObtainVerilatorLibsErro
     return Ok(files);
 }
 
-/// Create a command for running Verilator. The command has no arguments.
-fn create_verilator_command() -> Command {
-    Command::new("verilator")
-}
-
 // Run verilator on the given verilog file and place the output in the output directory.
 fn copy_from_container(output_directory: &PathBuf) -> Result<(), ObtainVerilatorLibsError> {
-    let mut get_root_command = create_verilator_command();
+    let mut get_root_command = RustHlsCommand::new("verilator");
     get_root_command.arg("--getenv").arg("VERILATOR_ROOT");
     let output = get_root_command.output()?;
     let root_path = PathBuf::from(
@@ -50,7 +47,8 @@ fn copy_from_container(output_directory: &PathBuf) -> Result<(), ObtainVerilator
             .trim(),
     );
 
-    let mut copy_files_command = Command::new("sh");
+    let mut copy_files_command = RustHlsCommand::new("sh");
+    copy_files_command.add_directory(output_directory);
     copy_files_command.arg("-c");
 
     copy_files_command.arg(format!(
@@ -63,8 +61,8 @@ fn copy_from_container(output_directory: &PathBuf) -> Result<(), ObtainVerilator
         output_directory.to_string_lossy(),
     ));
 
-    let status = copy_files_command.status()?;
-    if !status.success() {
+    let output = copy_files_command.output()?;
+    if !output.status.success() {
         return Err(ObtainVerilatorLibsError::VerilatorDidNotExitSuccessfully());
     }
     return Ok(());

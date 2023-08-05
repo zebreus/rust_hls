@@ -1,18 +1,18 @@
 //! Contains the `verilate_module` function, which runs Verilator on a given Verilog file
 
 use rust_hls_executor::CrateFile;
+use rust_hls_tools::{RustHlsCommand, RustHlsCommandError};
 use std::{
     fs::{create_dir_all, read_dir},
-    path::PathBuf,
-    process::Command,
+    path::{Path, PathBuf},
 };
 use tempfile::TempDir;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum VerilateModuleError {
-    #[error("Verilator did not execute successfully")]
-    VerilatorDidNotExitSuccessfully(),
+    #[error(transparent)]
+    RustHlsCommandError(#[from] RustHlsCommandError),
     #[error(transparent)]
     IoError(#[from] std::io::Error),
 }
@@ -30,7 +30,7 @@ pub fn verilate_module(
 
     std::fs::write(&input_file_path, verilog.to_string())?;
 
-    run_verilator(&input_file_path, &output_path, top_module)?;
+    run_verilator(&dir.path(), &input_file_path, &output_path, top_module)?;
 
     let files = collect_results(&output_path)?;
 
@@ -40,22 +40,37 @@ pub fn verilate_module(
 }
 
 /// Create a command for running Verilator. The command has no arguments.
-pub fn create_verilator_command() -> Command {
-    Command::new("verilator")
-}
+// pub fn create_verilator_command(working_directory: &Path) -> Command {
+//     let working_directory = working_directory.to_string_lossy().to_string();
+//     let mut command = Command::new("docker");
+
+//     command
+//         .arg("run")
+//         .arg("--rm")
+//         .arg("-v")
+//         .arg(format!("{working_directory}:{working_directory}"))
+//         .arg("-w")
+//         .arg(working_directory)
+//         .arg("zebreus/rust_hls_tools:latest")
+//         .arg("verilator_bin");
+
+//     command
+// }
 
 // Run verilator on the given verilog file and place the output in the output directory.
 fn run_verilator(
-    input_file: &PathBuf,
-    output_directory: &PathBuf,
+    working_directory: &Path,
+    input_file: &Path,
+    output_directory: &Path,
     top_module: &str,
 ) -> Result<(), VerilateModuleError> {
-    let mut cmd = create_verilator_command();
+    let mut cmd = RustHlsCommand::new("verilator_bin");
+    cmd.set_working_directory(working_directory);
     cmd.arg("--cc")
         .arg("-Mdir")
-        .arg(&output_directory)
+        .arg(output_directory.to_string_lossy())
         .arg("--top-module")
-        .arg(&top_module)
+        .arg(top_module)
         // TODO: Modify wrapper generator so --trace is not required
         .arg("--trace")
         .arg("-O3")
@@ -63,18 +78,10 @@ fn run_verilator(
         .arg("-Wno-pinmissing")
         .arg("-Wno-timescalemod")
         .arg("+1364-2005ext+v")
-        .arg(&input_file);
-    run(&mut cmd)?;
-    return Ok(());
-}
+        .arg(input_file.to_string_lossy());
 
-/// Run a command and return an error if it does not exit successfully.
-fn run(cmd: &mut Command) -> Result<(), VerilateModuleError> {
-    println!("running: {:?}", cmd);
-    let status = cmd.status()?;
-    if !status.success() {
-        return Err(VerilateModuleError::VerilatorDidNotExitSuccessfully());
-    }
+    cmd.output()?;
+
     return Ok(());
 }
 
