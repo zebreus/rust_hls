@@ -230,11 +230,11 @@ pub fn generate_rust_hdl_struct(
     #[cfg(not(feature = "verilator"))]
     let force_struct_sync = quote! {};
 
-    #[cfg(feature = "verilator")]
-    let extern_crate_verilated = quote!(
-        extern crate verilated;
-    );
-    #[cfg(not(feature = "verilator"))]
+    // #[cfg(feature = "verilator")]
+    // let extern_crate_verilated = quote!(
+    //     extern crate verilated;
+    // );
+    // #[cfg(not(feature = "verilator"))]
     let extern_crate_verilated = quote! {};
 
     // Generate the rust-hdl struct

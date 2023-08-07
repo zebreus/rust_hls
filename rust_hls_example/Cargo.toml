@@ -10,7 +10,6 @@ publish = false
 [dependencies]
 rust-hdl = "0.45.1"
 rust_hls_macro.workspace = true
-verilated = { path = "/home/lennart/Documents/verilated-rs/verilated", version = "0.1.0" }
 
 [build-dependencies]
 rust_hls = { workspace = true, features = ["verilator"] }

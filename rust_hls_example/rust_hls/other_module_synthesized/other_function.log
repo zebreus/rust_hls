@@ -1,0 +1,155 @@
+++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
++ CRATE_NAME=eebafccbebcebbidBanSfA
+++ echo eebafccbebcebbidBanSfA
+++ tr - _
++ CRATE_NAME_UNDERSCORED=eebafccbebcebbidBanSfA
+++ pwd
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA'
+Executing synthesis in /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA
++++ cargo locate-project --message-format plain --workspace
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+++ dirname /home/lennart/.cache/rust-hls/Cargo.toml
++ WORKSPACE_LOCATION=/home/lennart/.cache/rust-hls
++ export 'RUSTFLAGS=--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ RUSTFLAGS='--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
+++ cargo build --release -Z unstable-options --build-plan
+++ grep -Po '^.*\.rlib$'
+++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
++++ pwd
+++ tr -d '\n'
++++ pwd
++++ pwd
++++ id -u
++++ id -g
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA:/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
++ cargo build --release -Z unstable-options
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+   Compiling eebafccbebcebbidBanSfA v1.0.0 (/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA)
+warning: crate `eebafccbebcebbidBanSfA` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `eebafccbebcebbid_ban_sf_a`
+  = note: `#[warn(non_snake_case)]` on by default
+
+warning: `eebafccbebcebbidBanSfA` (lib) generated 1 warning
+    Finished release [optimized] target(s) in 0.03s
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -u
+++ id -u
+++ id -g
+++ id -g
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA:/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA:/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/eebafccbebcebbidBanSfA-ea2eed6cf2c13d5a.bc
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA:/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=other_function
++ cp result.ll other_function.ll
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA:/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/e7934e21b2667afc704c4be75bcebb3-0i0dBanSfA --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=other_function --clock-name=clk --compiler=I386_CLANG16
+ ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=other_function --clock-name=clk --compiler=I386_CLANG16 result.ll 
+
+
+********************************************************************************
+                    ____                  _
+                   | __ )  __ _ _ __ ___ | |_   _   _
+                   |  _ \ / _` | '_ ` _ \| '_ \| | | |
+                   | |_) | (_| | | | | | | |_) | |_| |
+                   |____/ \__,_|_| |_| |_|_.__/ \__,_|
+
+********************************************************************************
+                         High-Level Synthesis Tool
+
+                         Politecnico di Milano - DEIB
+                          System Architectures Group
+********************************************************************************
+                Copyright (C) 2004-2023 Politecnico di Milano
+    Version: PandA 2023.2 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5
+
+Target technology = FPGA
+
+  Functions to be synthesized:
+    other_function
+
+
+  Memory allocation information:
+    BRAM bitsize: 8
+    Spec may not exploit DATA bus width
+    All the data have a known address
+    Internal data is not externally accessible
+    DATA bus bitsize: 8
+    ADDRESS bus bitsize: 10
+    SIZE bus bitsize: 4
+    ALL pointers have been resolved
+    Internally allocated memory (no private memories): 0
+    Internally allocated memory: 0
+  Time to perform memory allocation: 0.00 seconds
+
+
+  Module allocation information for function other_function:
+    Number of complex operations: 1
+    Number of complex operations: 1
+  Time to perform module allocation: 0.00 seconds
+
+
+  Scheduling Information of function other_function:
+    Number of control steps: 4
+    Minimum slack: 1.006399999000001
+    Estimated max frequency (MHz): 111.19017967096713
+  Time to perform scheduling: 0.00 seconds
+
+
+  State Transition Graph Information of function other_function:
+    Number of states: 2
+    Minimum number of cycles: 2
+    Maximum number of cycles 2
+    Done port is registered
+  Time to perform creation of STG: 0.00 seconds
+
+
+  Easy binding information for function other_function:
+    Bound operations:5/5
+  Time to perform easy binding: 0.00 seconds
+
+
+  Storage Value Information of function other_function:
+    Number of storage values inserted: 1
+  Time to compute storage value information: 0.00 seconds
+
+
+  Module binding information for function other_function:
+    Number of modules instantiated: 5
+    Number of performance conflicts: 0
+    Estimated resources area (no Muxes and address logic): 34
+    Estimated area of MUX21: 0
+    Total estimated area: 34
+    Estimated number of DSPs: 3
+  Time to perform module binding: 0.00 seconds
+
+
+  Register binding information for function other_function:
+    Register allocation algorithm obtains an optimal result: 1 registers
+  Time to perform register binding: 0.00 seconds
+
+  Total number of flip-flops in function other_function: 32
+  All registers are without enable: function pipelining may come for free
+  Resources are not shared in function other_function: function pipelining may come for free
++ mv other_function.v result.v
