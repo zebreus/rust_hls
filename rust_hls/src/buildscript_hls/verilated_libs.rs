@@ -1,13 +1,13 @@
 //! This file attempts to bundle all the functionalities needed for the verilator libs in one place.
 
 use std::{
-    fs::create_dir_all,
-    io,
+    fs::{create_dir_all, remove_dir_all, write},
+    io::{self, Read},
     path::{Path, PathBuf},
 };
 
 use glob::PatternError;
-use rust_hls_executor::CrateFile;
+use rust_hls_executor::{calculate_hash, CrateFile};
 use rust_hls_verilator::{verilate_module, ObtainVerilatorLibsError, VerilateModuleError};
 use thiserror::Error;
 
@@ -93,16 +93,36 @@ pub fn get_verilated_module_path(
     return Ok(target_directory);
 }
 
+fn read_hash_file(path: &Path) -> Option<String> {
+    let mut file = std::fs::File::open(path.join("state.hash")).ok()?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).ok()?;
+    Some(contents.trim().to_string())
+}
+
+fn write_hash_file(path: &Path, new_hash: &str) -> Result<(), io::Error> {
+    let file: PathBuf = path.join("state.hash");
+    write(file, new_hash)
+}
+
 /// Places the verilator output for a Verilog file in a `verilated_module` directory beside it
 pub fn place_verilated_module(
     verilog_file: &CrateFile,
     top_module: &str,
 ) -> Result<(), VerilatedModuleError> {
     let target_directory = get_verilated_module_path(&verilog_file.path)?;
+    // if target_directory.exists() {
+    //     return Ok(());
+    // }
 
-    if target_directory.exists() {
+    let new_hash = calculate_hash(&vec![verilog_file.content.clone()]);
+    let previous_hash = read_hash_file(&target_directory);
+
+    if previous_hash == Some(new_hash.clone()) {
         return Ok(());
     }
+
+    remove_dir_all(&target_directory).unwrap_or(());
     create_dir_all(&target_directory)?;
 
     verilate_module(&verilog_file.content, top_module)?
@@ -116,6 +136,8 @@ pub fn place_verilated_module(
             file.write()
         })
         .collect::<Result<Vec<_>, _>>()?;
+
+    write_hash_file(&target_directory, &new_hash)?;
 
     return Ok(());
 }
