@@ -1,3 +1,7 @@
+//! Buildscript entrypoint
+//!
+//! Used to compile and link the verilator modules
+
 mod process_module;
 use std::{io, path::PathBuf};
 
@@ -23,11 +27,64 @@ use crate::buildscript_hls::verilated_libs::{
 };
 
 use self::{
-    perform_hls::{PerformHlsError, PerformHlsResult},
+    perform_hls::{CheckHlsError, PerformHlsError, PerformHlsResult},
     verilated_libs::{VerilatedLibsError, VerilatedModuleError},
 };
 #[derive(Error, Debug)]
 pub enum HlsBuildscriptError {
+    #[error(transparent)]
+    FindModulesError(#[from] FindModulesError),
+    #[error("Crate root does not exist {path}")]
+    FailedToFindCrateRoot { path: String },
+    #[error(transparent)]
+    CheckHlsError(#[from] CheckHlsError),
+    #[error(transparent)]
+    VerilatedModuleError(#[from] VerilatedModuleError),
+    #[error(transparent)]
+    IoError(#[from] io::Error),
+}
+
+#[cfg(feature = "verilator")]
+pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
+    let root = root
+        .canonicalize()
+        .or(Err(HlsBuildscriptError::FailedToFindCrateRoot {
+            path: root.to_string_lossy().to_string(),
+        }))?;
+
+    let found_modules = find_modules(&root)?;
+
+    let verilated_libs_path = root.join(PathBuf::from("rust_hls/verilated_libs"));
+
+    for module in found_modules {
+        let source_file = module.source_file.to_string_lossy().to_string();
+        println!("cargo:rerun-if-changed={}", source_file);
+        println!("cargo:warning=Found HLS module in {}", source_file);
+
+        let result = perform_hls::check_hls(&module)?;
+
+        let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
+
+        let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
+
+        compile_verilated_module(
+            &get_verilated_module_path(&verilog_crate_file.path)?,
+            &root.join(result.verilated_cpp_file_path()),
+            &verilated_libs_path,
+            result.function_name(),
+        )?;
+    }
+
+    Ok(())
+}
+
+#[cfg(not(feature = "verilator"))]
+pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
+    Ok(())
+}
+
+#[derive(Error, Debug)]
+pub enum HlsGeneratorError {
     #[error(transparent)]
     FindModulesError(#[from] FindModulesError),
     #[error(transparent)]
@@ -44,10 +101,10 @@ pub enum HlsBuildscriptError {
     IoError(#[from] io::Error),
 }
 
-pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
+pub fn generator_hls(root: &PathBuf) -> Result<(), HlsGeneratorError> {
     let root = root
         .canonicalize()
-        .or(Err(HlsBuildscriptError::FailedToFindCrateRoot {
+        .or(Err(HlsGeneratorError::FailedToFindCrateRoot {
             path: root.to_string_lossy().to_string(),
         }))?;
 
@@ -60,10 +117,6 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
 
     for module in found_modules {
         let mut result = perform_hls::perform_hls(&module)?;
-        println!(
-            "cargo:rerun-if-changed={}",
-            module.source_file.to_string_lossy().to_string()
-        );
         if let PerformHlsResult::New {
             synthesized_file,
             verilog_file,
@@ -95,47 +148,12 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
 
         #[cfg(feature = "verilator")]
         {
-            // let out_dir = std::env::var("OUT_DIR").unwrap();
-            // let out_dir = PathBuf::from(out_dir);
-            // std::fs::create_dir_all(&out_dir);
             let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
-            // let cpp_file = result
-            //     .verilated_cpp_file_path()
-            //     .to_string_lossy()
-            //     .to_string();
-
-            println!("cargo:rerun-if-changed={}", verilog_file);
 
             let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
             let top_module = result.function_name();
 
-            // Generate CPP from Verilog
-
             place_verilated_module(&verilog_crate_file, top_module)?;
-            // println!("cargo:warning=############################################################################################################################################### {:?}", verilog_crate_file);
-
-            // compile_verilated_libs(&verilated_libs_path)?;
-
-            compile_verilated_module(
-                &get_verilated_module_path(&verilog_crate_file.path)?,
-                &root.join(result.verilated_cpp_file_path()),
-                &verilated_libs_path,
-                top_module,
-            )?;
-            // let mut verilator = Verilator::default();
-            // verilator
-            //     .with_coverage(false)
-            //     .with_trace(true)
-            //     .no_warn("width")
-            //     .no_warn("pinmissing")
-            //     .no_warn("timescalemod")
-            //     .with_performance_optimizations(true)
-            //     .file_with_standard(
-            //         &root.join(result.verilog_file_path()),
-            //         Standard::Verilog2005,
-            //     )
-            //     .file(&root.join(cpp_file))
-            //     .build(result.function_name());
         }
     }
 

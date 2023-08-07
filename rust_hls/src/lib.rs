@@ -99,6 +99,7 @@ mod generated_file;
 // pub(crate) use darling_error_outside_macro::DarlingErrorOutsideMacro;
 
 pub use buildscript_hls::buildscript_hls;
+pub use buildscript_hls::generator_hls;
 
 pub use build::Build;
 pub use build::Error;

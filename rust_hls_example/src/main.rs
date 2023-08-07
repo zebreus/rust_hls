@@ -8,13 +8,13 @@ pub mod your_module {
     }
 }
 
-#[rust_hls_macro::hls]
-pub mod other_module {
-    #[hls(include_logs, include_llvm_ir)]
-    pub extern "C" fn other_function(a: u32, b: u32) -> u32 {
-        a * b - a
-    }
-}
+// #[rust_hls_macro::hls]
+// pub mod other_module {
+//     #[hls(include_logs, include_llvm_ir)]
+//     pub extern "C" fn other_function(a: u32, b: u32) -> u32 {
+//         a * b - a
+//     }
+// }
 
 pub fn main() {
     let mut device: YourFunction = YourFunction::new();
@@ -46,7 +46,8 @@ mod tests {
 
             wait_clock_cycle!(sim, clk, adder);
 
-            sim_assert_eq!(sim, adder.return_port.val(), 84, adder);
+            let result: u32 = adder.return_port.val().to_u32();
+            sim_assert_eq!(sim, result, 84, adder);
 
             sim.done(adder)
         });

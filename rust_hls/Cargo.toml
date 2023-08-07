@@ -10,6 +10,19 @@ categories = ["development-tools::build-utils", "compilers"]
 homepage = "https://github.com/zebreus/rust_hls/tree/master/rust_hls"
 description = "High level synthesis support for rust-hdl"
 
+# Still figuring out which one is the most ergonomic
+[[bin]]
+name = "cargo-hls"
+path = "src/main.rs"
+
+# [[bin]]
+# name = "cargo-rust_hls"
+# path = "src/main.rs"
+
+# [[bin]]
+# name = "rust_hls"
+# path = "src/main.rs"
+
 [features]
 default = ["verilator"]
 verilator = ["dep:cc"]

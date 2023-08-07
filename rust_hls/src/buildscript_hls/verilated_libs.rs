@@ -171,8 +171,6 @@ pub fn compile_verilated_module(
     let mut files = get_verilated_module_files(verilated_module_path)?;
     let mut lib_files = get_lib_files(verilated_lib_path)?;
     files.append(&mut lib_files);
-    let mut lib_files = get_lib_files(verilated_lib_path)?;
-    files.append(&mut lib_files);
     files.push(cpp_shim_path.into());
 
     let mut include_dirs = get_lib_include_dirs(verilated_lib_path)?;

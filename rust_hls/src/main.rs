@@ -1,5 +1,5 @@
 use clap::Parser;
-use rust_hls::Build;
+use rust_hls::generator_hls;
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
@@ -11,5 +11,7 @@ struct Cli {
 fn main() {
     let args = Cli::parse();
 
-    Build::new().crate_root(args.directory).synthesize();
+    let root = args.directory.clone();
+
+    generator_hls(&root).unwrap();
 }
