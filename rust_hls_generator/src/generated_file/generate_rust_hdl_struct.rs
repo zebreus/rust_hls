@@ -40,9 +40,19 @@ pub fn fix_bambu_llvm_parameters(
     signals: &mut Vec<Signal>,
     ordered_parameter_names: &Vec<String>,
 ) -> Result<(), GenerateRustHdlStructError> {
+    // Find the parameter signals
+    //
+    // Most of the time parameter signals are like Pd2, Pd3, Pd4, ...
+    // but sometimes they are only like P0, P1, P2, ...
+    //
+    // TODO: Figure out why this is the case and maybe fix it upstream
     let mut parameter_signals: Vec<&mut Signal> = signals
         .iter_mut()
-        .filter(|signal| signal.internal_name.starts_with("Pd"))
+        .filter(|signal| {
+            signal.internal_name.starts_with("Pd")
+                || (signal.internal_name.starts_with("P")
+                    && signal.internal_name.as_bytes()[1].is_ascii_digit())
+        })
         .collect();
 
     // For now we assume the order to match

@@ -99,6 +99,8 @@ pub fn extract_rust_hdl_interface(
     verilog: &str,
     module_name: &str,
 ) -> Result<RustHdlModule, sv_parser::Error> {
+    // eprintln!("Extracting rust-hdl interface from {}", module_name);
+    // eprintln!("Verilog: {}", verilog);
     let syntax_tree = parse_verilog_string(verilog)?;
     let ports = extract_verilog_interface(&syntax_tree, Some(module_name));
     let signals: Vec<Signal> = ports.iter().map_into().collect();
