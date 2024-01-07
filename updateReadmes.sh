@@ -5,7 +5,9 @@
 packages=(
     "extract_rust_hdl_interface"
     "rust_hls"
-    "rust_hls_example"
+    "rust_hls_examples/multiplier"
+    "rust_hls_examples/adder"
+    "rust_hls_examples/using_rust_hls_modules"
     "rust_hls_executor"
     "rust_hls_macro"
     "rust_hls_macro_lib"
@@ -19,11 +21,12 @@ packages=(
 
 for package in "${packages[@]}"; do
     cd $package
+    package_name=$(basename $package)
     cat <<EOF >README
-# $package
+# $package_name
 
 <!-- cargo-rdme -->
 EOF
     cargo rdme --force
-    cd ..
+    cd - >/dev/null
 done

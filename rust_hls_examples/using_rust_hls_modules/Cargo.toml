@@ -1,0 +1,13 @@
+[package]
+name = "using_rust_hls_modules"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+rust-hdl = "0.45.1"
+adder.workspace = true
+multiplier.workspace = true
