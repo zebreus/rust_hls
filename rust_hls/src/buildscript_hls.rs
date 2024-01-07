@@ -23,12 +23,14 @@ use thiserror::Error;
 
 use crate::buildscript_hls::verilated_libs::{
     compile_verilated_module, get_verilated_module_path, place_verilated_module,
-    place_verilator_libs,
 };
 
 use self::{
     perform_hls::{CheckHlsError, PerformHlsError, PerformHlsResult},
-    verilated_libs::{VerilatedLibsError, VerilatedModuleError},
+    verilated_libs::{
+        get_verilated_libs_path, place_verilated_libs_in_crate, VerilatedLibsError,
+        VerilatedModuleError,
+    },
 };
 #[derive(Error, Debug)]
 pub enum HlsBuildscriptError {
@@ -54,8 +56,6 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
 
     let found_modules = find_modules(&root)?;
 
-    let verilated_libs_path = root.join(PathBuf::from("rust_hls/verilated_libs"));
-
     for module in found_modules {
         let source_file = module.source_file.to_string_lossy().to_string();
         println!("cargo:rerun-if-changed={}", source_file);
@@ -70,7 +70,7 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
         compile_verilated_module(
             &get_verilated_module_path(&verilog_crate_file.path)?,
             &root.join(result.verilated_cpp_file_path()),
-            &verilated_libs_path,
+            &get_verilated_libs_path(&root),
             result.function_name(),
         )?;
     }
@@ -111,9 +111,7 @@ pub fn generator_hls(root: &PathBuf) -> Result<(), HlsGeneratorError> {
     let found_modules = find_modules(&root)?;
 
     #[cfg(feature = "verilator")]
-    let verilated_libs_path = root.join(PathBuf::from("rust_hls/verilated_libs"));
-    #[cfg(feature = "verilator")]
-    place_verilator_libs(&verilated_libs_path)?;
+    place_verilated_libs_in_crate(&root)?;
 
     for module in found_modules {
         let mut result = perform_hls::perform_hls(&module)?;

@@ -44,8 +44,15 @@ pub fn assert_verilator_libs_exists(verilated_lib_path: &Path) -> Result<(), Ver
     return Ok(());
 }
 
+/// Place the verilated libs in the crate root.
+pub fn place_verilated_libs_in_crate(crate_root: &Path) -> Result<(), VerilatedLibsError> {
+    let verilated_libs_path = get_verilated_libs_path(crate_root);
+
+    place_verilated_libs(&verilated_libs_path)
+}
+
 /// Place the verilator libs in the given directory.
-pub fn place_verilator_libs(path: &Path) -> Result<(), VerilatedLibsError> {
+pub fn place_verilated_libs(path: &Path) -> Result<(), VerilatedLibsError> {
     let verilator_libs_path = path;
 
     if verilator_libs_path.exists() {
@@ -91,6 +98,14 @@ pub fn get_verilated_module_path(
         .join("verilated_module");
 
     return Ok(target_directory);
+}
+
+/// Get the path to the directory that contains the headers and source of the verilated runtime
+/// library.
+///
+/// Currently always returns `rust_hls/verilated_libs`.
+pub fn get_verilated_libs_path(crate_root: &Path) -> PathBuf {
+    crate_root.join("rust_hls/verilated_libs")
 }
 
 fn read_hash_file(path: &Path) -> Option<String> {
@@ -170,12 +185,13 @@ fn get_lib_include_dirs(verilated_lib_path: &Path) -> Result<Vec<PathBuf>, Veril
 fn get_lib_files(verilated_lib_path: &Path) -> Result<Vec<PathBuf>, VerilatedLibsError> {
     assert_verilator_libs_exists(verilated_lib_path)?;
     let files: Vec<_> = vec![
-        "verilated.cpp",
         "verilated_cov.cpp",
         "verilated_dpi.cpp",
         "verilated_save.cpp",
         "verilated_vcd_c.cpp",
+        "verilated_threads.cpp",
         "verilated_vpi.cpp",
+        "verilated.cpp",
     ]
     .into_iter()
     .map(|p| verilated_lib_path.join(p))
@@ -307,7 +323,7 @@ mod tests {
 
         let target_dir = dir.path().join("output");
 
-        place_verilator_libs(&target_dir).unwrap();
+        place_verilated_libs(&target_dir).unwrap();
 
         let files = read_dir(&target_dir).unwrap();
 
@@ -367,7 +383,7 @@ mod tests {
 
         let target_dir = dir.path();
 
-        place_verilator_libs(&target_dir).unwrap();
+        place_verilated_libs(&target_dir).unwrap();
 
         let files = read_dir(&target_dir).unwrap();
 
