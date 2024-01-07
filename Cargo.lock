@@ -1206,6 +1206,23 @@ dependencies = [
 name = "rust_hls"
 version = "0.2.0"
 dependencies = [
+ "rust_hls_cli",
+ "rust_hls_core",
+ "rust_hls_macro",
+]
+
+[[package]]
+name = "rust_hls_cli"
+version = "0.2.0"
+dependencies = [
+ "clap",
+ "rust_hls_core",
+]
+
+[[package]]
+name = "rust_hls_core"
+version = "0.2.0"
+dependencies = [
  "base64 0.21.2",
  "cargo_toml",
  "cc",

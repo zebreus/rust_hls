@@ -1,0 +1,20 @@
+[package]
+name = "rust_hls_cli"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+keywords = ["verilog", "fpga", "hls", "high-level-synthesis", "bambu"]
+categories = ["development-tools::build-utils", "compilers"]
+homepage = "https://github.com/zebreus/rust_hls/tree/master/rust_hls"
+description = "Cli interface for rust_hls"
+
+# You should use cargo-hls from the `rust_hls` crate.
+[[bin]]
+name = "cargo-hls-cli"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.3.4", features = ["derive"] }
+rust_hls_core.workspace = true

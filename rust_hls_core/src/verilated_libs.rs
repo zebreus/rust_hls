@@ -218,6 +218,8 @@ pub fn compile_verilated_module(
     cpp_cfg.cpp(true).define("VL_PRINTF", "printf");
     cpp_cfg.opt_level(3);
 
+    cpp_cfg.flag("-pthread");
+
     let tool = cpp_cfg.get_compiler();
     if tool.is_like_clang() {
         cpp_cfg

@@ -75,6 +75,7 @@
               pkgs.cacert.out
               pkgs.findutils
             ];
+            extraCommands = "mkdir -m 0777 tmp";
             config = {
               Cmd = [
                 "${pkgs.lib.getExe pkgs.bambu}"

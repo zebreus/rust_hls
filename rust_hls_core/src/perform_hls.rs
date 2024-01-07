@@ -1,12 +1,12 @@
 use std::path::PathBuf;
 
 use crate::{
-    buildscript_hls::process_module::process_module,
     generated_file::{
         generate_file, generate_llvm_file_path, generate_log_file_path, generate_output_filename,
         generate_verilated_cpp_file_path, generate_verilog_file_path, ExtractHashError,
         ExtractModulePathError, GenerateRustHdlStructError,
     },
+    process_module::process_module,
 };
 use rust_hls_executor::{CrateFile, RustHlsError};
 

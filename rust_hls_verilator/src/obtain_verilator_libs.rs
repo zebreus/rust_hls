@@ -115,6 +115,7 @@ mod tests {
     #[test]
     fn test_verilator() {
         let files = obtain_verilator_libs().unwrap();
-        assert_eq!(files.len(), 31);
+        // The number of files will change as the verilator version changes.
+        assert!(files.len() >= 31);
     }
 }

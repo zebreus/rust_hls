@@ -16,7 +16,7 @@ pub enum Error {
     #[error("Failed to automatically find crate root.")]
     CrateRootNotFound,
     #[error(transparent)]
-    HlsError(#[from] buildscript_hls::HlsBuildscriptError),
+    HlsError(#[from] crate::HlsBuildscriptError),
 }
 
 impl Build {

@@ -154,11 +154,13 @@ mod tests {
         let crate_name = "test_crate";
         let function_name = "add";
 
+        let mut arguments = HlsArguments::default();
+        arguments.bambu_flag.push("-v4".into());
         generate_hls_script_file(
             &crate_path,
             &GenerateHlsOptions {
                 function_name: function_name.into(),
-                hls_arguments: HlsArguments::default(),
+                hls_arguments: arguments,
             },
         )
         .unwrap();

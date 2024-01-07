@@ -1,7 +1,14 @@
+//! This module provides functionality for processing crates with rust-hls annotations.
+//! You probably do not want to use this directly, but instead use the `rust_hls`crate
+//! or the `rust_hls_cli` crate (I am not yet sure which one as the project is constantly restructured).
+//!
 //! Buildscript entrypoint
 //!
 //! Used to compile and link the verilator modules
 
+mod build;
+mod darling_error_outside_macro;
+mod generated_file;
 mod process_module;
 use std::{io, path::PathBuf};
 
@@ -13,6 +20,8 @@ mod find_modules;
 use find_modules::*;
 mod perform_hls;
 
+pub use build::{Build, Error};
+
 // #[cfg(feature = "verilator")]
 // mod generate_verilator_shim;
 // #[cfg(feature = "verilator")]
@@ -21,7 +30,7 @@ mod perform_hls;
 use rust_hls_executor::CrateFile;
 use thiserror::Error;
 
-use crate::buildscript_hls::verilated_libs::{
+use crate::verilated_libs::{
     compile_verilated_module, get_verilated_module_path, place_verilated_module,
 };
 

@@ -119,7 +119,7 @@ mod tests {
         command.arg("--version");
         let output = command.output().unwrap();
         let stdout = String::from_utf8(output.stdout).unwrap();
-        assert!(stdout.contains("Verilator 4.110"));
+        assert!(stdout.contains("Verilator"));
     }
 
     #[test]

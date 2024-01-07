@@ -130,6 +130,6 @@ mod tests {
         ";
 
         let files = verilate_module(verilog, "test").unwrap();
-        assert_eq!(files.len(), 5);
+        assert!(files.len() >= 5);
     }
 }

@@ -5,6 +5,8 @@
 packages=(
     "extract_rust_hdl_interface"
     "rust_hls"
+    "rust_hls_core"
+    "rust_hls_cli"
     "examples/multiplier"
     "examples/adder"
     "examples/using_rust_hls_modules"
