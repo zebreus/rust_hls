@@ -1,7 +1,9 @@
-# rust_hls_example
+# using_rust_hls_modules
 
 <!-- cargo-rdme start -->
 
-A basic rust-hls example project
+This example demonstrates how crates that use rust-hls can be used in another crate.
+
+In this case we use the adder and the multiplier examples
 
 <!-- cargo-rdme end -->
