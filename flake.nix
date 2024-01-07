@@ -6,7 +6,7 @@
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:zebreus/nixpkgs?rev=570ffa9c6529d5157153a8562e16e6e4a7ecb636";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=8967c9ec4590c14f1939d8e36782149148843229";
     old-nixpkgs.url = "nixpkgs/nixos-21.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -40,7 +40,8 @@
               # # For rust_hls
               # # Required commands in path: verilator, bambu, llvm-extract, llvm-link, llvm-dis, jq, grep, sed, tr, export, sh
               # # Also a old version of verilator
-              old-pkgs.verilator
+              # old-pkgs.verilator
+              verilator
               llvmPackages_16.libllvm # Required for rust-hls-lib
               jq
               bambu
@@ -56,7 +57,7 @@
               # c compiler
               pkgs.stdenv.cc
               # other tools for rust_hls
-              old-pkgs.verilator
+              pkgs.verilator
               pkgs.llvmPackages_16.libllvm # Required for rust-hls-lib
               pkgs.jq
               # make the container usable interactivly

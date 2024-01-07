@@ -4,6 +4,16 @@
 
 Real high-level synthesis from Rust using Bambu
 
+For now the Readme is more of a notepad of things I want to keep track of than an actual readme. I will try to clean it up later.
+
+You should probably not use this crate yet.
+
+== Usage
+
+My first attempt at rust_hls involved a proc macro that would get expanded to a rust-hdl component which wraps the generated Verilog using verilator. This was a bad idea, because the performance is horrible and everything runs at compile time. I tried to mitigate that by adding multiple levels of caching, but it was still too slow too be usable. Next I tried using a rust buildscript, but that is still to slow, because it gets called by multiple tools. It is also a compatibility nightmare as bambu and verilator have to be available during builds. That makes rust_hls not very portable. I think the best approach is to move all the HLS and verilation to a separate program that places the generated files into the project.  They should then be commited to the repository so users of the hls module do not need to run the toolchain. This way the only extra compiletime dependency is a C compiler to compile the verilated files.
+
+
+
 == Making it convenient to use HLS from rust
 
 In the previous post we synthesized a Verilog counter from Rust code. Then we manually pasted that Verilog into a handmade `rust-hdl` component, so that we can use it. This is not very convient. 
