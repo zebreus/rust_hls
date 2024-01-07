@@ -94,7 +94,7 @@
 //! There are probably lots of bugs in the code.
 
 /// The generator crate contains the code that is used to generate the HDL from the Rust code.
-pub use rust_hls_core::generator_hls;
+pub use rust_hls_generator::generator_hls;
 
 /// The build crate contains the code that is used to link and compile the verilator modules for the simulation.
 pub use rust_hls_build::{Build, Error};

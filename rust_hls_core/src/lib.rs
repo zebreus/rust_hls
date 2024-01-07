@@ -1,3 +1,7 @@
+//! This module provides common functionality for the rust_hls crates.
+//! The focus is on module discovery and management. The actual processing of the
+//! modules is done by the `rust_hls_generator` crate, so that this crate is lighter
+//! and does not have a ton of dependencies.
 //! This module provides functionality for processing crates with rust-hls annotations.
 //! You probably do not want to use this directly, but instead use the `rust_hls`crate
 //! or the `rust_hls_cli` crate (I am not yet sure which one as the project is constantly restructured).
@@ -5,104 +9,25 @@
 mod darling_error_outside_macro;
 mod generated_file;
 mod process_module;
-use std::{io, path::PathBuf};
 
 #[cfg(feature = "verilator")]
 mod verilated_libs;
 
-use process_module::*;
 mod find_modules;
 pub mod perform_hls;
 
-pub use find_modules::{find_modules, FindModulesError};
-pub use perform_hls::{check_hls, CheckHlsError, PerformHlsError, PerformHlsResult};
+pub use find_modules::{find_modules, FindModulesError, MacroModule};
+pub use generated_file::{
+    extract_file_hash, filename_to_module_path, generate_hash_comment, generate_hash_regex,
+    generate_llvm_file_path, generate_log_file_path, generate_output_filename,
+    generate_output_module_path, generate_verilated_cpp_file_path, generate_verilator_output_path,
+    generate_verilog_file_path, module_path_to_filename, ExtractHashError, ExtractModulePathError,
+};
+pub use perform_hls::{check_hls, CheckHlsError, PerformHlsResult};
+pub use process_module::{process_module, ProcessModuleError, ProcessedModule};
 pub use verilated_libs::{get_verilated_libs_path, get_verilated_module_path};
 
 // #[cfg(feature = "verilator")]
 // mod generate_verilator_shim;
 // #[cfg(feature = "verilator")]
 // pub use generate_verilator_shim::*;
-
-use rust_hls_executor::CrateFile;
-use thiserror::Error;
-
-use crate::verilated_libs::place_verilated_module;
-
-use self::verilated_libs::{
-    place_verilated_libs_in_crate, PlaceVerilatedLibsError, PlaceVerilatedModuleError,
-};
-
-#[derive(Error, Debug)]
-pub enum HlsGeneratorError {
-    #[error(transparent)]
-    FindModulesError(#[from] FindModulesError),
-    #[error(transparent)]
-    ProcessModulesError(#[from] ProcessModuleError),
-    #[error("Crate root does not exist {path}")]
-    FailedToFindCrateRoot { path: String },
-    #[error(transparent)]
-    PerformHlsError(#[from] PerformHlsError),
-    #[error(transparent)]
-    VerilatedLibsError(#[from] PlaceVerilatedLibsError),
-    #[error(transparent)]
-    VerilatedModuleError(#[from] PlaceVerilatedModuleError),
-    #[error(transparent)]
-    IoError(#[from] io::Error),
-}
-
-pub fn generator_hls(root: &PathBuf) -> Result<(), HlsGeneratorError> {
-    let root = root
-        .canonicalize()
-        .or(Err(HlsGeneratorError::FailedToFindCrateRoot {
-            path: root.to_string_lossy().to_string(),
-        }))?;
-
-    let found_modules = find_modules(&root)?;
-
-    #[cfg(feature = "verilator")]
-    place_verilated_libs_in_crate(&root)?;
-
-    for module in found_modules {
-        let mut result = perform_hls::perform_hls(&module)?;
-        if let PerformHlsResult::New {
-            synthesized_file,
-            verilog_file,
-            llvm_file,
-            log_file,
-            #[cfg(feature = "verilator")]
-            verilated_cpp_file,
-            ..
-        } = &mut result
-        {
-            synthesized_file.path = root.join(&synthesized_file.path);
-            synthesized_file.write()?;
-            verilog_file.path = root.join(&verilog_file.path);
-            verilog_file.write()?;
-            if let Some(llvm_file) = llvm_file {
-                llvm_file.path = root.join(&llvm_file.path);
-                llvm_file.write()?;
-            }
-            if let Some(log_file) = log_file {
-                log_file.path = root.join(&log_file.path);
-                log_file.write()?;
-            }
-            #[cfg(feature = "verilator")]
-            {
-                verilated_cpp_file.path = root.join(&verilated_cpp_file.path);
-                verilated_cpp_file.write()?;
-            }
-        }
-
-        #[cfg(feature = "verilator")]
-        {
-            let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
-
-            let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
-            let top_module = result.function_name();
-
-            place_verilated_module(&verilog_crate_file, top_module)?;
-        }
-    }
-
-    Ok(())
-}

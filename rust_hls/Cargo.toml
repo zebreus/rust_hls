@@ -25,11 +25,11 @@ path = "src/main.rs"
 
 [features]
 default = ["verilator"]
-verilator = ["rust_hls_core/verilator"]
+verilator = ["rust_hls_generator/verilator"]
 
 [dependencies]
 rust_hls_build.workspace = true
-rust_hls_core.workspace = true
+rust_hls_generator.workspace = true
 rust_hls_cli.workspace = true
 
 [dev-dependencies]

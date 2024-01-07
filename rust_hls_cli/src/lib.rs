@@ -6,7 +6,7 @@
 //! instead which re-exports this crate.
 
 use clap::Parser;
-use rust_hls_core::generator_hls;
+use rust_hls_generator::generator_hls;
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]

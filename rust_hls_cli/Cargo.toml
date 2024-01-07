@@ -17,4 +17,4 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.3.4", features = ["derive"] }
-rust_hls_core.workspace = true
+rust_hls_generator.workspace = true

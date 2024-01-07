@@ -84,40 +84,35 @@ pub struct MacroModule {
     pub output_file: PathBuf,
 }
 
-#[cfg(test)]
-mod test_impl {
-    use super::super::find_modules;
-    use super::MacroModule;
-    use fs_extra::file::write_all;
-    use std::fs::create_dir_all;
-    use tempfile::TempDir;
-    impl MacroModule {
-        /// Helper for creating MacroModules in tests
-        pub fn new_for_tests(content: proc_macro2::TokenStream, filename: &str) -> (Self, TempDir) {
-            let file: syn::File = syn::parse2(content).unwrap();
-            let content = prettyplease::unparse(&file);
-            Self::new_for_tests_string(&content, filename)
-        }
-        /// Helper for creating MacroModules in tests
-        pub fn new_for_tests_string(content: &str, filename: &str) -> (Self, TempDir) {
-            let dir = TempDir::new().unwrap();
-            create_dir_all(dir.path().join("src")).unwrap();
-            write_all(dir.path().join(filename), content).unwrap();
-            write_all(
-                dir.path().join("Cargo.toml"),
-                r#"[package]
+impl MacroModule {
+    /// Helper for creating MacroModules in tests
+    pub fn new_for_tests(
+        content: proc_macro2::TokenStream,
+        filename: &str,
+    ) -> (Self, tempfile::TempDir) {
+        let file: syn::File = syn::parse2(content).unwrap();
+        let content = prettyplease::unparse(&file);
+        Self::new_for_tests_string(&content, filename)
+    }
+    /// Helper for creating MacroModules in tests
+    pub fn new_for_tests_string(content: &str, filename: &str) -> (Self, tempfile::TempDir) {
+        let dir = tempfile::TempDir::new().unwrap();
+        std::fs::create_dir_all(dir.path().join("src")).unwrap();
+        fs_extra::file::write_all(dir.path().join(filename), content).unwrap();
+        fs_extra::file::write_all(
+            dir.path().join("Cargo.toml"),
+            r#"[package]
         name = "test-crate"
         version = "1.0.0"
         edition = "2021""#,
-            )
-            .unwrap();
+        )
+        .unwrap();
 
-            let modules = find_modules(&dir.path().into()).unwrap();
+        let modules = super::find_modules(&dir.path().into()).unwrap();
 
-            let first_module = modules.into_iter().nth(0).unwrap();
+        let first_module = modules.into_iter().nth(0).unwrap();
 
-            (first_module, dir)
-        }
+        (first_module, dir)
     }
 }
 

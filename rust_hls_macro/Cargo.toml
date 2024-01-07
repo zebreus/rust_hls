@@ -20,12 +20,9 @@ path = "tests/progress.rs"
 
 [dependencies]
 darling = "0.20.1"
-itertools = { version = "0.10.5" }
 proc-macro2 = { version = "1.0.56", features = ["span-locations"] }
 quote = { version = "1.0.26" }
-rust-hdl = { version = "0.45.1" }
 rust_hls_macro_lib.workspace = true
-syn = { version = "2.0.15", features = ["full"] }
 tempfile = "3.5.0"
 thiserror = "1.0.40"
 

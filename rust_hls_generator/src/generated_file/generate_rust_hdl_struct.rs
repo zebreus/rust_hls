@@ -3,11 +3,10 @@ use extract_rust_hdl_interface::{extract_rust_hdl_interface, Direction, SignalTy
 use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
+use rust_hls_core::generate_verilated_cpp_file_path;
 use rust_hls_executor::CrateFile;
 use rust_hls_verilator_shim::generate_verilator_shim_from_rusthdl_module;
 use thiserror::Error;
-
-use super::generate_verilated_cpp_file_path;
 
 // #[cfg(feature = "verilator")]
 // use crate::buildscript_hls::generate_verilator_shims_from_rusthdl_module;
