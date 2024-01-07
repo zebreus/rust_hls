@@ -1,11 +1,11 @@
 ++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
-+ CRATE_NAME=eeedabccaddfffacbRICfEKl
-++ echo eeedabccaddfffacbRICfEKl
++ CRATE_NAME=beeebcfaecfaXGtYQUBl
 ++ tr - _
-+ CRATE_NAME_UNDERSCORED=eeedabccaddfffacbRICfEKl
+++ echo beeebcfaecfaXGtYQUBl
++ CRATE_NAME_UNDERSCORED=beeebcfaecfaXGtYQUBl
 ++ pwd
-+ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l'
-Executing synthesis in /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl'
+Executing synthesis in /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl
 +++ cargo locate-project --message-format plain --workspace
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
@@ -17,14 +17,14 @@ note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in th
 + LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
 ++ cargo build --release -Z unstable-options --build-plan
 ++ grep -Po '^.*\.rlib$'
-++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
 ++ tr -d '\n'
+++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
 +++ pwd
 +++ pwd
 +++ pwd
 +++ id -u
 +++ id -g
-++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l:/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl:/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
 note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
@@ -32,13 +32,13 @@ note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in th
 warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
 note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
 note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
-   Compiling eeedabccaddfffacbRICfEKl v1.0.0 (/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l)
-warning: crate `eeedabccaddfffacbRICfEKl` should have a snake case name
+   Compiling beeebcfaecfaXGtYQUBl v1.0.0 (/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl)
+warning: crate `beeebcfaecfaXGtYQUBl` should have a snake case name
   |
-  = help: convert the identifier to snake case: `eeedabccaddfffacb_ricf_ekl`
+  = help: convert the identifier to snake case: `beeebcfaecfa_xgt_yqubl`
   = note: `#[warn(non_snake_case)]` on by default
 
-warning: `eeedabccaddfffacbRICfEKl` (lib) generated 1 warning
+warning: `beeebcfaecfaXGtYQUBl` (lib) generated 1 warning
     Finished release [optimized] target(s) in 0.03s
 ++ pwd
 ++ pwd
@@ -55,16 +55,16 @@ warning: `eeedabccaddfffacbRICfEKl` (lib) generated 1 warning
 ++ id -g
 ++ id -g
 ++ id -g
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l:/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/eeedabccaddfffacbRICfEKl-9f68121dbafd75a0.bc
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l:/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=adder
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l:/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl:/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl:/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/beeebcfaecfaXGtYQUBl-6039ee49e3a0a33f.bc
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl:/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=adder
 + cp result.ll adder.ll
 ++ pwd
 ++ pwd
 ++ pwd
 ++ id -u
 ++ id -g
-+ docker run --rm -i -v /home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l:/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1eeedabc644c9a30dd40f89f3f5ac3b6-RIC52fEK4l --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=adder --clock-name=clk --compiler=I386_CLANG16
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl:/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/38be285eeb1cf6a0e72651c193fa8308-5XGt4YQUBl --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=adder --clock-name=clk --compiler=I386_CLANG16
  ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=adder --clock-name=clk --compiler=I386_CLANG16 result.ll 
 
 
@@ -82,9 +82,27 @@ warning: `eeedabccaddfffacbRICfEKl` (lib) generated 1 warning
                           System Architectures Group
 ********************************************************************************
                 Copyright (C) 2004-2023 Politecnico di Milano
-    Version: PandA 2023.2 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5
+   Version: PandA 2023.12 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5
 
-Target technology = FPGA
+Warning: Missing XML module architecture file.
+  Analyzing function adder
+    Parameter @428395 Pd5
+    Interface specification:
+      Parameter : Pd5
+      Protocol  : default
+      Direction : IN
+      Bundle    : Pd5
+      Bitwidth  : 32
+      Alignment : 4
+    Parameter @428396 Pd6
+    Interface specification:
+      Parameter : Pd6
+      Protocol  : default
+      Direction : IN
+      Bundle    : Pd6
+      Bitwidth  : 32
+      Alignment : 4
+  Analyzed function adder
 
   Functions to be synthesized:
     adder
@@ -95,7 +113,7 @@ Target technology = FPGA
     Spec may not exploit DATA bus width
     All the data have a known address
     Internal data is not externally accessible
-    DATA bus bitsize: 8
+    DATA bus bitsize: 0
     ADDRESS bus bitsize: 10
     SIZE bus bitsize: 4
     ALL pointers have been resolved

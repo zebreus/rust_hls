@@ -16,6 +16,7 @@ members = [
     "spanned_error_message",
     "examples/multiplier",
     "examples/adder",
+    "examples/multiple_modules",
     "examples/using_rust_hls_modules",
     "extract_rust_hdl_interface",
     "wrap_verilog_in_rust_hdl_macro",
@@ -44,6 +45,7 @@ rust_hls_verilator = { path = "rust_hls_verilator", version = "0.2.0" }
 rust_hls_tools = { path = "rust_hls_tools", version = "0.2.0" }
 adder = { path = "examples/adder" }
 multiplier = { path = "examples/multiplier" }
+multiple_modules = { path = "examples/multiple_modules" }
 spanned_error_message = { path = "spanned_error_message", version = "0.1.0" }
 wrap_verilog_in_rust_hdl_macro = { path = "wrap_verilog_in_rust_hdl_macro", version = "0.2.0" }
 extract_rust_hdl_interface = { path = "extract_rust_hdl_interface", version = "0.2.0" }

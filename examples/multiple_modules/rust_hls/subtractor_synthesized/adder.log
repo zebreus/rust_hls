@@ -1,0 +1,170 @@
+++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
++ CRATE_NAME=beecfdedccaTmkjnACd
+++ echo beecfdedccaTmkjnACd
+++ tr - _
++ CRATE_NAME_UNDERSCORED=beecfdedccaTmkjnACd
+++ pwd
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd'
+Executing synthesis in /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd
++++ cargo locate-project --message-format plain --workspace
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+++ dirname /home/lennart/.cache/rust-hls/Cargo.toml
++ WORKSPACE_LOCATION=/home/lennart/.cache/rust-hls
++ export 'RUSTFLAGS=--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ RUSTFLAGS='--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
+++ cargo build --release -Z unstable-options --build-plan
+++ grep -Po '^.*\.rlib$'
+++ tr -d '\n'
+++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
++++ pwd
++++ pwd
++++ pwd
++++ id -u
++++ id -g
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd:/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
++ cargo build --release -Z unstable-options
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+   Compiling beecfdedccaTmkjnACd v1.0.0 (/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd)
+warning: crate `beecfdedccaTmkjnACd` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `beecfdedcca_tmkjn_acd`
+  = note: `#[warn(non_snake_case)]` on by default
+
+warning: `beecfdedccaTmkjnACd` (lib) generated 1 warning
+    Finished release [optimized] target(s) in 0.03s
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -u
+++ id -u
+++ id -g
+++ id -g
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd:/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd:/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=adder
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd:/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/beecfdedccaTmkjnACd-2b00cd3f59aa3302.bc
++ cp result.ll adder.ll
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd:/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/bee7133c892644f860de248d8c5ca034-Tmkjn9A6Cd --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=adder --clock-name=clk --compiler=I386_CLANG16
+ ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=adder --clock-name=clk --compiler=I386_CLANG16 result.ll 
+
+
+********************************************************************************
+                    ____                  _
+                   | __ )  __ _ _ __ ___ | |_   _   _
+                   |  _ \ / _` | '_ ` _ \| '_ \| | | |
+                   | |_) | (_| | | | | | | |_) | |_| |
+                   |____/ \__,_|_| |_| |_|_.__/ \__,_|
+
+********************************************************************************
+                         High-Level Synthesis Tool
+
+                         Politecnico di Milano - DEIB
+                          System Architectures Group
+********************************************************************************
+                Copyright (C) 2004-2023 Politecnico di Milano
+   Version: PandA 2023.12 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5
+
+Warning: Missing XML module architecture file.
+  Analyzing function adder
+    Parameter @428395 Pd5
+    Interface specification:
+      Parameter : Pd5
+      Protocol  : default
+      Direction : IN
+      Bundle    : Pd5
+      Bitwidth  : 32
+      Alignment : 4
+    Parameter @428396 Pd6
+    Interface specification:
+      Parameter : Pd6
+      Protocol  : default
+      Direction : IN
+      Bundle    : Pd6
+      Bitwidth  : 32
+      Alignment : 4
+  Analyzed function adder
+
+  Functions to be synthesized:
+    adder
+
+
+  Memory allocation information:
+    BRAM bitsize: 8
+    Spec may not exploit DATA bus width
+    All the data have a known address
+    Internal data is not externally accessible
+    DATA bus bitsize: 0
+    ADDRESS bus bitsize: 10
+    SIZE bus bitsize: 4
+    ALL pointers have been resolved
+    Internally allocated memory (no private memories): 0
+    Internally allocated memory: 0
+  Time to perform memory allocation: 0.00 seconds
+
+
+  Module allocation information for function adder:
+    Number of complex operations: 0
+    Number of complex operations: 0
+  Time to perform module allocation: 0.00 seconds
+
+
+  Scheduling Information of function adder:
+    Number of control steps: 3
+    Minimum slack: 7.4059999990000005
+    Estimated max frequency (MHz): 385.50501141653632
+  Time to perform scheduling: 0.00 seconds
+
+
+  State Transition Graph Information of function adder:
+    Number of states: 1
+    Minimum number of cycles: 1
+    Maximum number of cycles 1
+  Time to perform creation of STG: 0.00 seconds
+
+
+  Easy binding information for function adder:
+    Bound operations:4/4
+  Time to perform easy binding: 0.00 seconds
+
+
+  Storage Value Information of function adder:
+    Number of storage values inserted: 0
+  Time to compute storage value information: 0.00 seconds
+
+
+  Module binding information for function adder:
+    Number of modules instantiated: 4
+    Number of performance conflicts: 0
+    Estimated resources area (no Muxes and address logic): 34
+    Estimated area of MUX21: 0
+    Total estimated area: 34
+    Estimated number of DSPs: 0
+  Time to perform module binding: 0.00 seconds
+
+
+  Register binding information for function adder:
+    Register allocation algorithm obtains an optimal result: 0 registers
+  Time to perform register binding: 0.00 seconds
+
+  Total number of flip-flops in function adder: 0
++ mv adder.v result.v

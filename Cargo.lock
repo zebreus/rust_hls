@@ -605,6 +605,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
+name = "multiple_modules"
+version = "0.2.0"
+dependencies = [
+ "rust-hdl",
+ "rust_hls",
+ "rust_hls_macro",
+]
+
+[[package]]
 name = "multiplier"
 version = "0.2.0"
 dependencies = [

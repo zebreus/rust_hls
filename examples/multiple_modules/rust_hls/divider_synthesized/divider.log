@@ -1,0 +1,240 @@
+++ grep -oP '(?<=name = ")[^"]*' Cargo.toml
++ CRATE_NAME=bebbfcdbafbcdeedlgtOPq
+++ echo bebbfcdbafbcdeedlgtOPq
+++ tr - _
++ CRATE_NAME_UNDERSCORED=bebbfcdbafbcdeedlgtOPq
+++ pwd
++ echo 'Executing synthesis in /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq'
+Executing synthesis in /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq
++++ cargo locate-project --message-format plain --workspace
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+++ dirname /home/lennart/.cache/rust-hls/Cargo.toml
++ WORKSPACE_LOCATION=/home/lennart/.cache/rust-hls
++ export 'RUSTFLAGS=--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ RUSTFLAGS='--emit=llvm-bc -C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false'
++ LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
+++ cargo build --release -Z unstable-options --build-plan
+++ grep -Po '^.*\.rlib$'
+++ sed -E 's/lib([^\/]*)\.rlib/\1\.bc /'
+++ tr -d '\n'
++++ pwd
++++ pwd
++++ pwd
++++ id -u
++++ id -g
+++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq:/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq --user 1000:100 zebreus/rust_hls_tools:latest jq '.invocations[].outputs[]' -r
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
++ cargo build --release -Z unstable-options
+warning: some crates are on edition 2021 which defaults to `resolver = "2"`, but virtual workspaces default to `resolver = "1"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+   Compiling bebbfcdbafbcdeedlgtOPq v1.0.0 (/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq)
+warning: crate `bebbfcdbafbcdeedlgtOPq` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `bebbfcdbafbcdeedlgt_opq`
+  = note: `#[warn(non_snake_case)]` on by default
+
+warning: `bebbfcdbafbcdeedlgtOPq` (lib) generated 1 warning
+    Finished release [optimized] target(s) in 0.03s
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -u
+++ id -u
+++ id -g
+++ id -g
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq:/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq --user 1000:100 zebreus/rust_hls_tools:latest llvm-link --opaque-pointers=false /home/lennart/.cache/rust-hls/target/release/deps/bebbfcdbafbcdeedlgtOPq-bdc7b4d7e43a50b1.bc
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq:/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq --user 1000:100 zebreus/rust_hls_tools:latest llvm-extract --opaque-pointers=false --recursive --keep-const-init --func=divider
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq:/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq --user 1000:100 zebreus/rust_hls_tools:latest llvm-dis --opaque-pointers=false -o result.ll
++ cp result.ll divider.ll
+++ pwd
+++ pwd
+++ pwd
+++ id -u
+++ id -g
++ docker run --rm -i -v /home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq:/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq -v /home/lennart/.cache/rust-hls/target:/home/lennart/.cache/rust-hls/target --workdir=/home/lennart/.cache/rust-hls/1446bebb41fcdb0a7f9bc63d67e2e28d-lg52t83OPq --user 1000:100 zebreus/rust_hls_tools:latest bambu --simulator=VERILATOR result.ll --top-fname=divider --clock-name=clk --compiler=I386_CLANG16
+ ==  Bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=divider --clock-name=clk --compiler=I386_CLANG16 result.ll 
+
+
+********************************************************************************
+                    ____                  _
+                   | __ )  __ _ _ __ ___ | |_   _   _
+                   |  _ \ / _` | '_ ` _ \| '_ \| | | |
+                   | |_) | (_| | | | | | | |_) | |_| |
+                   |____/ \__,_|_| |_| |_|_.__/ \__,_|
+
+********************************************************************************
+                         High-Level Synthesis Tool
+
+                         Politecnico di Milano - DEIB
+                          System Architectures Group
+********************************************************************************
+                Copyright (C) 2004-2023 Politecnico di Milano
+   Version: PandA 2023.12 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5
+
+Warning: Missing XML module architecture file.
+  Analyzing function divider
+    Parameter @428395 Pd5
+    Interface specification:
+      Parameter : Pd5
+      Protocol  : default
+      Direction : IN
+      Bundle    : Pd5
+      Bitwidth  : 32
+      Alignment : 4
+    Parameter @428396 P0
+    Interface specification:
+      Parameter : P0
+      Protocol  : default
+      Direction : IN
+      Bundle    : P0
+      Bitwidth  : 32
+      Alignment : 4
+  Analyzed function divider
+
+  Functions to be synthesized:
+    __udivsi3
+    divider
+
+
+  Memory allocation information:
+    BRAM bitsize: 8
+    Spec may not exploit DATA bus width
+    All the data have a known address
+    Internal data is not externally accessible
+    DATA bus bitsize: 8
+    ADDRESS bus bitsize: 11
+    SIZE bus bitsize: 4
+    ALL pointers have been resolved
+    Internally allocated memory (no private memories): 0
+    Internally allocated memory: 256
+  Time to perform memory allocation: 0.00 seconds
+
+
+  Memory allocation information:
+    BRAM bitsize: 8
+    Spec may not exploit DATA bus width
+    All the data have a known address
+    Internal data is not externally accessible
+    DATA bus bitsize: 8
+    ADDRESS bus bitsize: 11
+    SIZE bus bitsize: 4
+    ALL pointers have been resolved
+    Internally allocated memory (no private memories): 0
+    Internally allocated memory: 256
+  Time to perform memory allocation: 0.00 seconds
+
+
+  Module allocation information for function __udivsi3:
+    Number of complex operations: 7
+    Number of complex operations: 7
+  Time to perform module allocation: 0.03 seconds
+
+
+  Scheduling Information of function __udivsi3:
+    Number of control steps: 13
+    Minimum slack: 0.33233332533333204
+    Estimated max frequency (MHz): 103.43757533763741
+  Time to perform scheduling: 0.02 seconds
+
+
+  State Transition Graph Information of function __udivsi3:
+    Number of states: 11
+    Minimum number of cycles: 11
+    Maximum number of cycles 11
+    Done port is registered
+  Time to perform creation of STG: 0.00 seconds
+
+
+  Easy binding information for function __udivsi3:
+    Bound operations:97/149
+  Time to perform easy binding: 0.00 seconds
+
+
+  Storage Value Information of function __udivsi3:
+    Number of storage values inserted: 17
+  Time to compute storage value information: 0.00 seconds
+
+  Slack computed in 0.00 seconds
+  Weight computation completed in 0.00 seconds
+  False-loop computation completed in 0.00 seconds
+
+  Register binding information for function __udivsi3:
+    Register allocation algorithm obtains a sub-optimal result: 17 registers(LB:6)
+  Time to perform register binding: 0.00 seconds
+
+  Clique covering computation completed in 0.00 seconds
+
+  Module binding information for function __udivsi3:
+    Number of modules instantiated: 149
+    Number of performance conflicts: 12
+    Estimated resources area (no Muxes and address logic): 2237
+    Estimated area of MUX21: 0
+    Total estimated area: 2237
+    Estimated number of DSPs: 18
+  Time to perform module binding: 0.00 seconds
+
+
+  Register binding information for function __udivsi3:
+    Register allocation algorithm obtains a sub-optimal result: 17 registers(LB:6)
+  Time to perform register binding: 0.00 seconds
+
+  Total number of flip-flops in function __udivsi3: 472
+
+  Module allocation information for function divider:
+    Number of complex operations: 1
+    Number of complex operations: 1
+  Time to perform module allocation: 0.00 seconds
+
+
+  Scheduling Information of function divider:
+    Number of control steps: 5
+    Minimum slack: 1.7763568394002505e-15
+    Estimated max frequency (MHz): 100.00000000000001
+  Time to perform scheduling: 0.01 seconds
+
+
+  State Transition Graph Information of function divider:
+    Number of states: 4
+    Done port is registered
+  Time to perform creation of STG: 0.00 seconds
+
+
+  Easy binding information for function divider:
+    Bound operations:6/6
+  Time to perform easy binding: 0.00 seconds
+
+
+  Storage Value Information of function divider:
+    Number of storage values inserted: 2
+  Time to compute storage value information: 0.00 seconds
+
+
+  Module binding information for function divider:
+    Number of modules instantiated: 6
+    Number of performance conflicts: 0
+    Estimated resources area (no Muxes and address logic): 2050
+    Estimated area of MUX21: 0
+    Total estimated area: 2050
+    Estimated number of DSPs: 0
+  Time to perform module binding: 0.00 seconds
+
+
+  Register binding information for function divider:
+    Register allocation algorithm obtains an optimal result: 2 registers
+  Time to perform register binding: 0.00 seconds
+
+  Total number of flip-flops in function divider: 64
++ mv divider.v result.v

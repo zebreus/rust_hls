@@ -1,6 +1,6 @@
 // 
 // Politecnico di Milano
-// Code created using PandA - Version: PandA 2023.2 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5 - Date 2024-01-07T14:45:17
+// Code created using PandA - Version: PandA 2023.12 - Revision 891ec3caed502474cab0813cc4a9fc678deabaa5 - Date 2024-01-07T21:41:02
 // /sbin/bambu executed with: /sbin/bambu --simulator=VERILATOR --top-fname=adder --clock-name=clk --compiler=I386_CLANG16 result.ll 
 // 
 // Send any bug to: panda-info@polimi.it
@@ -21,6 +21,7 @@
 // License along with the PandA framework; see the files COPYING.LIB
 // If not, see <http://www.gnu.org/licenses/>.
 // ************************************************************************
+
 
 `ifdef __ICARUS__
   `define _SIM_HAVE_CLOG2
@@ -81,15 +82,15 @@ module datapath_adder(clock,
   // OUT
   output [31:0] return_port;
   // Component and signal declarations
-  wire [31:0] out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_423514_423534;
+  wire [31:0] out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_428394_428414;
   
   ui_plus_expr_FU #(.BITSIZE_in1(32),
     .BITSIZE_in2(32),
-    .BITSIZE_out1(32)) fu_adder_423514_423534 (.out1(out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_423514_423534),
+    .BITSIZE_out1(32)) fu_adder_428394_428414 (.out1(out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_428394_428414),
     .in1(in_port_Pd6),
     .in2(in_port_Pd5));
   // io-signal post fix
-  assign return_port = out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_423514_423534;
+  assign return_port = out_ui_plus_expr_FU_32_32_32_3_i0_fu_adder_428394_428414;
 
 endmodule
 
