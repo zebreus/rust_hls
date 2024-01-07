@@ -1,136 +1,138 @@
 // Verilated -*- C++ -*-
-// DESCRIPTION: Verilator output: Design implementation internals
-// See Vadder.h for the primary calling header
+// DESCRIPTION: Verilator output: Model implementation (design independent parts)
 
-#include "Vadder.h"
-#include "Vadder__Syms.h"
+#include "Vadder__pch.h"
+#include "verilated_vcd_c.h"
 
-//==========
+//============================================================
+// Constructors
+
+Vadder::Vadder(VerilatedContext* _vcontextp__, const char* _vcname__)
+    : VerilatedModel{*_vcontextp__}
+    , vlSymsp{new Vadder__Syms(contextp(), _vcname__, this)}
+    , clk{vlSymsp->TOP.clk}
+    , reset{vlSymsp->TOP.reset}
+    , start_port{vlSymsp->TOP.start_port}
+    , done_port{vlSymsp->TOP.done_port}
+    , Pd5{vlSymsp->TOP.Pd5}
+    , Pd6{vlSymsp->TOP.Pd6}
+    , return_port{vlSymsp->TOP.return_port}
+    , rootp{&(vlSymsp->TOP)}
+{
+    // Register model with the context
+    contextp()->addModel(this);
+}
+
+Vadder::Vadder(const char* _vcname__)
+    : Vadder(Verilated::threadContextp(), _vcname__)
+{
+}
+
+//============================================================
+// Destructor
+
+Vadder::~Vadder() {
+    delete vlSymsp;
+}
+
+//============================================================
+// Evaluation function
+
+#ifdef VL_DEBUG
+void Vadder___024root___eval_debug_assertions(Vadder___024root* vlSelf);
+#endif  // VL_DEBUG
+void Vadder___024root___eval_static(Vadder___024root* vlSelf);
+void Vadder___024root___eval_initial(Vadder___024root* vlSelf);
+void Vadder___024root___eval_settle(Vadder___024root* vlSelf);
+void Vadder___024root___eval(Vadder___024root* vlSelf);
 
 void Vadder::eval_step() {
-    VL_DEBUG_IF(VL_DBG_MSGF("+++++TOP Evaluate Vadder::eval\n"); );
-    Vadder__Syms* __restrict vlSymsp = this->__VlSymsp;  // Setup global symbol table
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+++++TOP Evaluate Vadder::eval_step\n"); );
 #ifdef VL_DEBUG
     // Debug assertions
-    _eval_debug_assertions();
+    Vadder___024root___eval_debug_assertions(&(vlSymsp->TOP));
 #endif  // VL_DEBUG
-    // Initialize
-    if (VL_UNLIKELY(!vlSymsp->__Vm_didInit)) _eval_initial_loop(vlSymsp);
-    // Evaluate till stable
-    int __VclockLoop = 0;
-    QData __Vchange = 1;
-    do {
-        VL_DEBUG_IF(VL_DBG_MSGF("+ Clock loop\n"););
-        vlSymsp->__Vm_activity = true;
-        _eval(vlSymsp);
-        if (VL_UNLIKELY(++__VclockLoop > 100)) {
-            // About to fail, so enable debug to see what's not settling.
-            // Note you must run make with OPT=-DVL_DEBUG for debug prints.
-            int __Vsaved_debug = Verilated::debug();
-            Verilated::debug(1);
-            __Vchange = _change_request(vlSymsp);
-            Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("/tmp/nix-shell.TXfosx/.tmpd7D8CN/test.v", 197, "",
-                "Verilated model didn't converge\n"
-                "- See DIDNOTCONVERGE in the Verilator manual");
-        } else {
-            __Vchange = _change_request(vlSymsp);
-        }
-    } while (VL_UNLIKELY(__Vchange));
-}
-
-void Vadder::_eval_initial_loop(Vadder__Syms* __restrict vlSymsp) {
-    vlSymsp->__Vm_didInit = true;
-    _eval_initial(vlSymsp);
     vlSymsp->__Vm_activity = true;
-    // Evaluate till stable
-    int __VclockLoop = 0;
-    QData __Vchange = 1;
-    do {
-        _eval_settle(vlSymsp);
-        _eval(vlSymsp);
-        if (VL_UNLIKELY(++__VclockLoop > 100)) {
-            // About to fail, so enable debug to see what's not settling.
-            // Note you must run make with OPT=-DVL_DEBUG for debug prints.
-            int __Vsaved_debug = Verilated::debug();
-            Verilated::debug(1);
-            __Vchange = _change_request(vlSymsp);
-            Verilated::debug(__Vsaved_debug);
-            VL_FATAL_MT("/tmp/nix-shell.TXfosx/.tmpd7D8CN/test.v", 197, "",
-                "Verilated model didn't DC converge\n"
-                "- See DIDNOTCONVERGE in the Verilator manual");
-        } else {
-            __Vchange = _change_request(vlSymsp);
-        }
-    } while (VL_UNLIKELY(__Vchange));
-}
-
-VL_INLINE_OPT void Vadder::_combo__TOP__2(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_combo__TOP__2\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    vlTOPp->return_port = (vlTOPp->Pd6 + vlTOPp->Pd5);
-}
-
-VL_INLINE_OPT void Vadder::_sequent__TOP__4(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_sequent__TOP__4\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    vlTOPp->adder__DOT___adder_i0__DOT__Controller_i__DOT___present_state 
-        = (1U & ((~ (IData)(vlTOPp->reset)) | (IData)(vlTOPp->adder__DOT___adder_i0__DOT__Controller_i__DOT___next_state)));
-}
-
-VL_INLINE_OPT void Vadder::_combo__TOP__5(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_combo__TOP__5\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    vlTOPp->done_port = 0U;
-    if (vlTOPp->adder__DOT___adder_i0__DOT__Controller_i__DOT___present_state) {
-        if (vlTOPp->start_port) {
-            vlTOPp->done_port = 1U;
-        }
+    vlSymsp->__Vm_deleter.deleteAll();
+    if (VL_UNLIKELY(!vlSymsp->__Vm_didInit)) {
+        vlSymsp->__Vm_didInit = true;
+        VL_DEBUG_IF(VL_DBG_MSGF("+ Initial\n"););
+        Vadder___024root___eval_static(&(vlSymsp->TOP));
+        Vadder___024root___eval_initial(&(vlSymsp->TOP));
+        Vadder___024root___eval_settle(&(vlSymsp->TOP));
     }
+    VL_DEBUG_IF(VL_DBG_MSGF("+ Eval\n"););
+    Vadder___024root___eval(&(vlSymsp->TOP));
+    // Evaluate cleanup
+    Verilated::endOfEval(vlSymsp->__Vm_evalMsgQp);
 }
 
-void Vadder::_eval(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_eval\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    vlTOPp->_combo__TOP__2(vlSymsp);
-    if (((IData)(vlTOPp->clk) & (~ (IData)(vlTOPp->__Vclklast__TOP__clk)))) {
-        vlTOPp->_sequent__TOP__4(vlSymsp);
+//============================================================
+// Events and timing
+bool Vadder::eventsPending() { return false; }
+
+uint64_t Vadder::nextTimeSlot() {
+    VL_FATAL_MT(__FILE__, __LINE__, "", "%Error: No delays in the design");
+    return 0;
+}
+
+//============================================================
+// Utilities
+
+const char* Vadder::name() const {
+    return vlSymsp->name();
+}
+
+//============================================================
+// Invoke final blocks
+
+void Vadder___024root___eval_final(Vadder___024root* vlSelf);
+
+VL_ATTR_COLD void Vadder::final() {
+    Vadder___024root___eval_final(&(vlSymsp->TOP));
+}
+
+//============================================================
+// Implementations of abstract methods from VerilatedModel
+
+const char* Vadder::hierName() const { return vlSymsp->name(); }
+const char* Vadder::modelName() const { return "Vadder"; }
+unsigned Vadder::threads() const { return 1; }
+void Vadder::prepareClone() const { contextp()->prepareClone(); }
+void Vadder::atClone() const {
+    contextp()->threadPoolpOnClone();
+}
+std::unique_ptr<VerilatedTraceConfig> Vadder::traceConfig() const {
+    return std::unique_ptr<VerilatedTraceConfig>{new VerilatedTraceConfig{false, false, false}};
+};
+
+//============================================================
+// Trace configuration
+
+void Vadder___024root__trace_init_top(Vadder___024root* vlSelf, VerilatedVcd* tracep);
+
+VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32_t code) {
+    // Callback from tracep->open()
+    Vadder___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vadder___024root*>(voidSelf);
+    Vadder__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    if (!vlSymsp->_vm_contextp__->calcUnusedSigs()) {
+        VL_FATAL_MT(__FILE__, __LINE__, __FILE__,
+            "Turning on wave traces requires Verilated::traceEverOn(true) call before time 0.");
     }
-    vlTOPp->_combo__TOP__5(vlSymsp);
-    // Final
-    vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;
+    vlSymsp->__Vm_baseCode = code;
+    tracep->pushPrefix(std::string{vlSymsp->name()}, VerilatedTracePrefixType::SCOPE_MODULE);
+    Vadder___024root__trace_init_top(vlSelf, tracep);
+    tracep->popPrefix();
 }
 
-VL_INLINE_OPT QData Vadder::_change_request(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_change_request\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    return (vlTOPp->_change_request_1(vlSymsp));
-}
+VL_ATTR_COLD void Vadder___024root__trace_register(Vadder___024root* vlSelf, VerilatedVcd* tracep);
 
-VL_INLINE_OPT QData Vadder::_change_request_1(Vadder__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_change_request_1\n"); );
-    Vadder* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    // Change detection
-    QData __req = false;  // Logically a bool
-    return __req;
+VL_ATTR_COLD void Vadder::trace(VerilatedVcdC* tfp, int levels, int options) {
+    if (tfp->isOpen()) {
+        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vadder::trace()' shall not be called after 'VerilatedVcdC::open()'.");
+    }
+    if (false && levels && options) {}  // Prevent unused
+    tfp->spTrace()->addModel(this);
+    tfp->spTrace()->addInitCb(&trace_init, &(vlSymsp->TOP));
+    Vadder___024root__trace_register(&(vlSymsp->TOP), tfp->spTrace());
 }
-
-#ifdef VL_DEBUG
-void Vadder::_eval_debug_assertions() {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vadder::_eval_debug_assertions\n"); );
-    // Body
-    if (VL_UNLIKELY((clk & 0xfeU))) {
-        Verilated::overWidthError("clk");}
-    if (VL_UNLIKELY((reset & 0xfeU))) {
-        Verilated::overWidthError("reset");}
-    if (VL_UNLIKELY((start_port & 0xfeU))) {
-        Verilated::overWidthError("start_port");}
-}
-#endif  // VL_DEBUG

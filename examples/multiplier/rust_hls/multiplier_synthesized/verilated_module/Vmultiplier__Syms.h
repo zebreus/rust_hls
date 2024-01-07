@@ -4,34 +4,37 @@
 // Internal details; most calling programs do not need this header,
 // unless using verilator public meta comments.
 
-#ifndef _VMULTIPLIER__SYMS_H_
-#define _VMULTIPLIER__SYMS_H_  // guard
+#ifndef VERILATED_VMULTIPLIER__SYMS_H_
+#define VERILATED_VMULTIPLIER__SYMS_H_  // guard
 
-#include "verilated_heavy.h"
+#include "verilated.h"
 
-// INCLUDE MODULE CLASSES
+// INCLUDE MODEL CLASS
+
 #include "Vmultiplier.h"
 
-// SYMS CLASS
-class Vmultiplier__Syms : public VerilatedSyms {
+// INCLUDE MODULE CLASSES
+#include "Vmultiplier___024root.h"
+
+// SYMS CLASS (contains all model state)
+class alignas(VL_CACHE_LINE_BYTES)Vmultiplier__Syms final : public VerilatedSyms {
   public:
-    
-    // LOCAL STATE
-    const char* __Vm_namep;
-    bool __Vm_activity;  ///< Used by trace routines to determine change occurred
-    uint32_t __Vm_baseCode;  ///< Used by trace routines when tracing multiple models
-    bool __Vm_didInit;
-    
-    // SUBCELL STATE
-    Vmultiplier*                   TOPp;
-    
-    // CREATORS
-    Vmultiplier__Syms(Vmultiplier* topp, const char* namep);
+    // INTERNAL STATE
+    Vmultiplier* const __Vm_modelp;
+    bool __Vm_activity = false;  ///< Used by trace routines to determine change occurred
+    uint32_t __Vm_baseCode = 0;  ///< Used by trace routines when tracing multiple models
+    VlDeleter __Vm_deleter;
+    bool __Vm_didInit = false;
+
+    // MODULE INSTANCE STATE
+    Vmultiplier___024root          TOP;
+
+    // CONSTRUCTORS
+    Vmultiplier__Syms(VerilatedContext* contextp, const char* namep, Vmultiplier* modelp);
     ~Vmultiplier__Syms();
-    
+
     // METHODS
-    inline const char* name() { return __Vm_namep; }
-    
-} VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);
+    const char* name() { return TOP.name(); }
+};
 
 #endif  // guard

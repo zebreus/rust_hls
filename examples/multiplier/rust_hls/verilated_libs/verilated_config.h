@@ -1,7 +1,9 @@
 // -*- mode: C++; c-file-style: "cc-mode" -*-
 //*************************************************************************
 //
-// Copyright 2003-2021 by Wilson Snyder. This program is free software; you can
+// Code available from: https://verilator.org
+//
+// Copyright 2003-2023 by Wilson Snyder. This program is free software; you can
 // redistribute it and/or modify it under the terms of either the GNU
 // Lesser General Public License Version 3 or the Perl Artistic License
 // Version 2.0.
@@ -10,14 +12,19 @@
 //*************************************************************************
 ///
 /// \file
-/// \brief Verilator: Auto version information include for all Verilated C files
-///
-/// Code available from: https://verilator.org
+/// \brief Verilator program version information header
 ///
 //*************************************************************************
 
-///**** Product and Version name
-
+/// Verilator product name, e.g. "Verilator"
 // Autoconf substitutes this with the strings from AC_INIT.
 #define VERILATOR_PRODUCT "Verilator"
-#define VERILATOR_VERSION "4.110 2021-02-25"
+
+/// Verilator version name, e.g. "1.002 2000-01-01"
+// Autoconf substitutes this with the strings from AC_INIT.
+#define VERILATOR_VERSION "5.018 2023-10-30"
+
+/// Verilator version number as integer
+/// As major * 100000 + minor * 1000, e.g. 1002000 == 1.002
+// Autoconf substitutes this with the strings from AC_INIT.
+#define VERILATOR_VERSION_INTEGER 5018000

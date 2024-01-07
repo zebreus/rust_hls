@@ -1,7 +1,9 @@
 // -*- mode: C++; c-file-style: "cc-mode" -*-
 //*************************************************************************
 //
-// Copyright 2009-2021 by Wilson Snyder. This program is free software; you can
+// Code available from: https://verilator.org
+//
+// Copyright 2009-2023 by Wilson Snyder. This program is free software; you can
 // redistribute it and/or modify it under the terms of either the GNU
 // Lesser General Public License Version 3 or the Perl Artistic License
 // Version 2.0.
@@ -10,44 +12,50 @@
 //=========================================================================
 ///
 /// \file
-/// \brief Verilator: VPI implementation code
+/// \brief Verilated VPI header
 ///
-///     This file must be compiled and linked against all objects
-///     created from Verilator or called by Verilator that use the VPI.
+/// This file contains routines related to using VPI with Verilated models.
 ///
-/// Code available from: https://verilator.org
+/// User wrapper code may need to include this if controlling Verilated
+/// models that use ths VPI.
 ///
 //=========================================================================
 
-#ifndef _VERILATED_VPI_H_
-#define _VERILATED_VPI_H_ 1  ///< Header Guard
+#ifndef VERILATOR_VERILATED_VPI_H_
+#define VERILATOR_VERILATED_VPI_H_
 
 #include "verilatedos.h"
+
 #include "verilated.h"
 #include "verilated_syms.h"
 
 //======================================================================
-// From IEEE 1800-2009 annex K
+// From IEEE 1800-2017 annex M
 
-#include "vltstd/vpi_user.h"
+#include "vltstd/sv_vpi_user.h"
 
 //======================================================================
 
+/// Class for namespace-like grouping of Verilator VPI functions.
+
 class VerilatedVpi final {
 public:
-    /// Call timed callbacks
-    /// Users should call this from their main loops
+    /// Call timed callbacks.
+    /// User wrapper code should call this from their main loops.
     static void callTimedCbs() VL_MT_UNSAFE_ONE;
-    /// Call value based callbacks
-    /// Users should call this from their main loops
+    /// Call value based callbacks.
+    /// User wrapper code should call this from their main loops.
     static bool callValueCbs() VL_MT_UNSAFE_ONE;
-    /// Call callbacks of arbitrary types
-    /// Users can call this from their application code
-    static bool callCbs(vluint32_t reason) VL_MT_UNSAFE_ONE;
+    /// Call callbacks of arbitrary types.
+    /// User wrapper code should call this from their main loops.
+    static bool callCbs(uint32_t reason) VL_MT_UNSAFE_ONE;
     /// Returns time of the next registered VPI callback, or
-    /// ~(0) if none are registered
+    /// ~(0ULL) if none are registered
     static QData cbNextDeadline() VL_MT_UNSAFE_ONE;
-    /// Self test, for internal use only
+    /// Debug dump of callbacks
+    static void dumpCbs() VL_MT_UNSAFE_ONE;
+
+    // Self test, for internal use only
     static void selfTest() VL_MT_UNSAFE_ONE;
 };
 
