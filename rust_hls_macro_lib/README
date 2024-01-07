@@ -2,7 +2,7 @@
 
 <!-- cargo-rdme start -->
 
-A library containing support functions for rust_hls and rust_hls
+A library containing support functions for [rust_hls](https://crates.io/crates/rust_hls) and [rust_hls_macro](https://crates.io/crates/rust_hls_macro)
 
 This basically contains all functions related to parsing the HLS macros from files. These functions are shared between the macro and the buildscript so they both parse in the same way and produce the same error messages.
 

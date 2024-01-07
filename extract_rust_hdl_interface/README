@@ -1,6 +1,7 @@
+# extract_rust_hdl_interface
+
 <!-- cargo-rdme start -->
 
-# generate_rust_hdl_module
 This crate provides a `extract_rust_hdl_interface` function that extracts all the info you need to generate a rust-hdl module from a Verilog module.
 
 The function does not actually generate code it just extracts the interface. It is mainly meant be used through the [`wrap_verilog!`](https://docs.rs/proc-macro-error/latest/wrap_verilog_in_rust_hdl_macro/) macro.

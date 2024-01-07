@@ -1,3 +1,7 @@
 # rust_hls_example
 
-A basic example for using rust_hls
+<!-- cargo-rdme start -->
+
+A basic rust-hls example project
+
+<!-- cargo-rdme end -->

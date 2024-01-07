@@ -4,16 +4,16 @@
 //!
 //! For now it only supports PandA bambu as a HLS backend
 //!
-//! ## Documentation
+//! # Documentation
 //!
 //! Currently there is not much more documentation than the rustdoc.
 //! If you need more documentation open an issue or an PR.
 //!
-//! ## Contributing
+//! # Contributing
 //!
 //! I am happy about any major or minor contributions.
 //!
-//! ## Bugs
+//! # Bugs
 //!
 //! There are probably lots of bugs in the code.
 mod generate_hls_script;

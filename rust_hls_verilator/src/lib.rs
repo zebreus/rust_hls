@@ -1,3 +1,5 @@
+//! The part of rust_hls that is responsible for running verilator to generated verilated C++ code
+
 mod obtain_verilator_libs;
 mod verilate_module;
 

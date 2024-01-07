@@ -78,10 +78,11 @@ pub fn main() {
 }
 ```
 
+You can find a full example at [rust_hdl_example](https://github.com/zebreus/bachelor-thesis/tree/master/bambu-macro/rust_hls_example).
+
 ### HLS Macro
 
 The hls macro has options for configuring `rust_flags` and `hls_flags`.
-
 
 ### Documentation
 
@@ -91,5 +92,9 @@ If you need more documentation open an issue or an PR.
 ### Contributing
 
 I am happy about any major or minor contributions.
+
+### Bugs
+
+There are probably lots of bugs in the code.
 
 <!-- cargo-rdme end -->

@@ -1,3 +1,5 @@
+//! A basic rust-hls example project
+
 use rust_hdl::prelude::*;
 
 #[rust_hls_macro::hls]

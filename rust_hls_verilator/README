@@ -1,0 +1,7 @@
+# rust_hls_verilator
+
+<!-- cargo-rdme start -->
+
+The part of rust_hls that is responsible for running verilator to generated verilated C++ code
+
+<!-- cargo-rdme end -->
