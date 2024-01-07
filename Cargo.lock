@@ -1206,9 +1206,48 @@ dependencies = [
 name = "rust_hls"
 version = "0.2.0"
 dependencies = [
+ "rust_hls_build",
  "rust_hls_cli",
  "rust_hls_core",
  "rust_hls_macro",
+]
+
+[[package]]
+name = "rust_hls_build"
+version = "0.2.0"
+dependencies = [
+ "base64 0.21.2",
+ "cargo_toml",
+ "cc",
+ "clap",
+ "convert_case",
+ "darling 0.20.3",
+ "derive_builder",
+ "directories",
+ "extract_rust_hdl_interface",
+ "fs_extra",
+ "fslock",
+ "glob",
+ "itertools",
+ "merkle_hash",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "rand",
+ "regex",
+ "rust_hls_core",
+ "rust_hls_executor",
+ "rust_hls_macro",
+ "rust_hls_macro_lib",
+ "rust_hls_script_generator",
+ "rust_hls_verilator",
+ "rust_hls_verilator_shim",
+ "serde",
+ "spanned_error_message",
+ "syn 2.0.26",
+ "tempfile",
+ "thiserror",
+ "toml",
 ]
 
 [[package]]

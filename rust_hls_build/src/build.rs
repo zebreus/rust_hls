@@ -1,7 +1,7 @@
+use crate::buildscript::{buildscript_hls, HlsBuildscriptError};
 use std::path::{Path, PathBuf};
 
-use crate::buildscript_hls;
-
+/// Convenience wrapper for `hls_buildscript`.
 pub struct Build {
     crate_root: Option<PathBuf>,
 }
@@ -16,7 +16,7 @@ pub enum Error {
     #[error("Failed to automatically find crate root.")]
     CrateRootNotFound,
     #[error(transparent)]
-    HlsError(#[from] crate::HlsBuildscriptError),
+    HlsError(#[from] HlsBuildscriptError),
 }
 
 impl Build {

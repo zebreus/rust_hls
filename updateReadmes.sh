@@ -7,6 +7,7 @@ packages=(
     "rust_hls"
     "rust_hls_core"
     "rust_hls_cli"
+    "rust_hls_build"
     "examples/multiplier"
     "examples/adder"
     "examples/using_rust_hls_modules"

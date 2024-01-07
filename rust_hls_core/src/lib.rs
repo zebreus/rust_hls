@@ -1,12 +1,7 @@
 //! This module provides functionality for processing crates with rust-hls annotations.
 //! You probably do not want to use this directly, but instead use the `rust_hls`crate
 //! or the `rust_hls_cli` crate (I am not yet sure which one as the project is constantly restructured).
-//!
-//! Buildscript entrypoint
-//!
-//! Used to compile and link the verilator modules
 
-mod build;
 mod darling_error_outside_macro;
 mod generated_file;
 mod process_module;
@@ -17,10 +12,11 @@ mod verilated_libs;
 
 use process_module::*;
 mod find_modules;
-use find_modules::*;
-mod perform_hls;
+pub mod perform_hls;
 
-pub use build::{Build, Error};
+pub use find_modules::{find_modules, FindModulesError};
+pub use perform_hls::{check_hls, CheckHlsError, PerformHlsError, PerformHlsResult};
+pub use verilated_libs::{get_verilated_libs_path, get_verilated_module_path};
 
 // #[cfg(feature = "verilator")]
 // mod generate_verilator_shim;
@@ -30,67 +26,11 @@ pub use build::{Build, Error};
 use rust_hls_executor::CrateFile;
 use thiserror::Error;
 
-use crate::verilated_libs::{
-    compile_verilated_module, get_verilated_module_path, place_verilated_module,
+use crate::verilated_libs::place_verilated_module;
+
+use self::verilated_libs::{
+    place_verilated_libs_in_crate, PlaceVerilatedLibsError, PlaceVerilatedModuleError,
 };
-
-use self::{
-    perform_hls::{CheckHlsError, PerformHlsError, PerformHlsResult},
-    verilated_libs::{
-        get_verilated_libs_path, place_verilated_libs_in_crate, VerilatedLibsError,
-        VerilatedModuleError,
-    },
-};
-#[derive(Error, Debug)]
-pub enum HlsBuildscriptError {
-    #[error(transparent)]
-    FindModulesError(#[from] FindModulesError),
-    #[error("Crate root does not exist {path}")]
-    FailedToFindCrateRoot { path: String },
-    #[error(transparent)]
-    CheckHlsError(#[from] CheckHlsError),
-    #[error(transparent)]
-    VerilatedModuleError(#[from] VerilatedModuleError),
-    #[error(transparent)]
-    IoError(#[from] io::Error),
-}
-
-#[cfg(feature = "verilator")]
-pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
-    let root = root
-        .canonicalize()
-        .or(Err(HlsBuildscriptError::FailedToFindCrateRoot {
-            path: root.to_string_lossy().to_string(),
-        }))?;
-
-    let found_modules = find_modules(&root)?;
-
-    for module in found_modules {
-        let source_file = module.source_file.to_string_lossy().to_string();
-        println!("cargo:rerun-if-changed={}", source_file);
-        println!("cargo:warning=Found HLS module in {}", source_file);
-
-        let result = perform_hls::check_hls(&module)?;
-
-        let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
-
-        let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
-
-        compile_verilated_module(
-            &get_verilated_module_path(&verilog_crate_file.path)?,
-            &root.join(result.verilated_cpp_file_path()),
-            &get_verilated_libs_path(&root),
-            result.function_name(),
-        )?;
-    }
-
-    Ok(())
-}
-
-#[cfg(not(feature = "verilator"))]
-pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
-    Ok(())
-}
 
 #[derive(Error, Debug)]
 pub enum HlsGeneratorError {
@@ -103,9 +43,9 @@ pub enum HlsGeneratorError {
     #[error(transparent)]
     PerformHlsError(#[from] PerformHlsError),
     #[error(transparent)]
-    VerilatedLibsError(#[from] VerilatedLibsError),
+    VerilatedLibsError(#[from] PlaceVerilatedLibsError),
     #[error(transparent)]
-    VerilatedModuleError(#[from] VerilatedModuleError),
+    VerilatedModuleError(#[from] PlaceVerilatedModuleError),
     #[error(transparent)]
     IoError(#[from] io::Error),
 }
