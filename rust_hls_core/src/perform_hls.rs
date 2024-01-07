@@ -17,6 +17,8 @@ use thiserror::Error;
 pub enum CheckHlsError {
     #[error(transparent)]
     ProcessModuleError(#[from] ProcessModuleError),
+    #[error("You need to run `cargo hls` to update the synthesized module for \"{0}\" because its source has changed.")]
+    ModuleChanged(String),
     #[error("Module {0} has not been processed yet. You need to run `cargo hls` first.")]
     ModuleNotProcessed(String),
 }
@@ -98,53 +100,56 @@ impl PerformHlsResult {
 
 /// Check if HLS has been performed on a given list of modules
 pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError> {
-    let processed_module = process_module(&module)?;
+    let processed_module: crate::ProcessedModule = process_module(&module)?;
     let new_hash = processed_module.calculate_hash();
 
     // Return empty vec if the hashes match
     let input_module_path = &module.absolute_module_path;
     let previous_hash = &module.previous_hash;
-    if let Some(previous_hash) = previous_hash {
-        if previous_hash == &new_hash {
-            return Ok(PerformHlsResult::Cached {
-                synthesized_file: generate_output_filename(input_module_path),
-                verilog_file: generate_verilog_file_path(
-                    input_module_path,
-                    &processed_module.function_name,
-                ),
-                llvm_file: if processed_module
-                    .rust_hls_args
-                    .include_llvm_ir
-                    .unwrap_or(false)
-                {
-                    Some(generate_llvm_file_path(
-                        input_module_path,
-                        &processed_module.function_name,
-                    ))
-                } else {
-                    None
-                },
-                log_file: if processed_module.rust_hls_args.include_logs.unwrap_or(false) {
-                    Some(generate_log_file_path(
-                        input_module_path,
-                        &processed_module.function_name,
-                    ))
-                } else {
-                    None
-                },
-                function_name: processed_module.function_name.clone(),
-                #[cfg(feature = "verilator")]
-                verilated_cpp_file: generate_verilated_cpp_file_path(
-                    input_module_path,
-                    &processed_module.function_name,
-                ),
-            });
-        }
+
+    let Some(previous_hash) = previous_hash else {
+        return Err(CheckHlsError::ModuleNotProcessed(
+            processed_module.function_name,
+        ));
+    };
+
+    if previous_hash != &new_hash {
+        return Err(CheckHlsError::ModuleChanged(processed_module.function_name));
     }
 
-    return Err(CheckHlsError::ModuleNotProcessed(
-        processed_module.function_name,
-    ));
+    return Ok(PerformHlsResult::Cached {
+        synthesized_file: generate_output_filename(input_module_path),
+        verilog_file: generate_verilog_file_path(
+            input_module_path,
+            &processed_module.function_name,
+        ),
+        llvm_file: if processed_module
+            .rust_hls_args
+            .include_llvm_ir
+            .unwrap_or(false)
+        {
+            Some(generate_llvm_file_path(
+                input_module_path,
+                &processed_module.function_name,
+            ))
+        } else {
+            None
+        },
+        log_file: if processed_module.rust_hls_args.include_logs.unwrap_or(false) {
+            Some(generate_log_file_path(
+                input_module_path,
+                &processed_module.function_name,
+            ))
+        } else {
+            None
+        },
+        function_name: processed_module.function_name.clone(),
+        #[cfg(feature = "verilator")]
+        verilated_cpp_file: generate_verilated_cpp_file_path(
+            input_module_path,
+            &processed_module.function_name,
+        ),
+    });
 }
 
 // TODO: Add test for check hls
