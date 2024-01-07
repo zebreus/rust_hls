@@ -5,9 +5,9 @@
 packages=(
     "extract_rust_hdl_interface"
     "rust_hls"
-    "rust_hls_examples/multiplier"
-    "rust_hls_examples/adder"
-    "rust_hls_examples/using_rust_hls_modules"
+    "examples/multiplier"
+    "examples/adder"
+    "examples/using_rust_hls_modules"
     "rust_hls_executor"
     "rust_hls_macro"
     "rust_hls_macro_lib"
