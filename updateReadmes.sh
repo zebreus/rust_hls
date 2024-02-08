@@ -24,13 +24,13 @@ packages=(
 )
 
 for package in "${packages[@]}"; do
-    cd $package
-    package_name=$(basename $package)
+    cd "$package" || exit 1
+    package_name=$(basename "$package")
     cat <<EOF >README.md
 # $package_name
 
 <!-- cargo-rdme -->
 EOF
     cargo rdme --force
-    cd - >/dev/null
+    cd - >/dev/null || exit 1
 done
