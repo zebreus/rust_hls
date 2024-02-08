@@ -1,6 +1,5 @@
 //! Functions for generating and parsing output files
-use rust_hls_core::{generate_hash_comment, generate_output_filename};
-use rust_hls_executor::CrateFile;
+use rust_hls_core::{hash_comment, synthesized_module_filepath, CrateFile};
 mod generate_rust_hdl_struct;
 pub use generate_rust_hdl_struct::*;
 
@@ -21,7 +20,7 @@ pub fn generate_file_content(
     source_module_path: &Vec<String>,
 ) -> Result<GenerateFileContentResult, GenerateRustHdlStructError> {
     // TODO: Dummy implementation
-    let hash_comment = generate_hash_comment(hash);
+    let hash_comment = hash_comment(hash);
     let rust_hdl_struct = generate_rust_hdl_struct(
         verilog,
         verilog_main_module,
@@ -65,7 +64,7 @@ pub fn generate_file(
     hash: &str,
     parameter_names: &Vec<String>,
 ) -> Result<GenerateFileResult, GenerateRustHdlStructError> {
-    let file_name = generate_output_filename(source_module_path);
+    let file_name = synthesized_module_filepath(source_module_path);
     let content = generate_file_content(
         verilog,
         verilog_main_module,

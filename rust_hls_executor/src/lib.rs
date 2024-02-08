@@ -18,11 +18,8 @@
 //! There are probably lots of bugs in the code.
 mod cache_workspace;
 mod caching;
-mod calculate_hash;
 mod rust_hls;
 
-pub use crate::calculate_hash::calculate_hash;
-pub use crate::rust_hls::CrateFile;
 pub use crate::rust_hls::RustHls;
 pub use crate::rust_hls::RustHlsError;
 pub use crate::rust_hls::RustHlsResult;

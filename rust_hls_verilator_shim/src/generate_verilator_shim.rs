@@ -11,7 +11,7 @@ use thiserror::Error;
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::format_ident;
 use quote::quote;
-use rust_hls_macro_lib::synthesized_struct_name;
+use rust_hls_core::synthesized_struct_name;
 
 #[derive(Error, Debug)]
 pub enum GenerateVerilatorShimError {

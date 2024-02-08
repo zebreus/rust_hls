@@ -1,12 +1,11 @@
 use crate::generated_file::{generate_file, GenerateRustHdlStructError};
 use itertools::Itertools;
 use rust_hls_core::{
-    generate_llvm_file_path, generate_log_file_path, generate_output_filename,
-    generate_verilated_cpp_file_path, generate_verilog_file_path, process_module, ExtractHashError,
-    ExtractModulePathError, MacroModule, PerformHlsResult, ProcessModuleError,
+    llvm_file_store_filepath, log_file_store_filepath, process_module, synthesized_module_filepath,
+    synthesized_struct_name, verilator_shim_file_path, verilog_file_store_filepath, CrateFile,
+    ExtractHashError, ExtractModulePathError, MacroModule, PerformHlsResult, ProcessModuleError,
 };
-use rust_hls_executor::{CrateFile, RustHlsError};
-use rust_hls_macro_lib::synthesized_struct_name;
+use rust_hls_executor::{RustHls, RustHlsError};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -34,8 +33,9 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
     if let Some(previous_hash) = previous_hash {
         if previous_hash == &new_hash {
             return Ok(PerformHlsResult::Cached {
-                synthesized_file: generate_output_filename(input_module_path),
-                verilog_file: generate_verilog_file_path(
+                synthesized_file: synthesized_module_filepath(input_module_path),
+                source_path: module.absolute_module_path.clone(),
+                verilog_file: verilog_file_store_filepath(
                     input_module_path,
                     &processed_module.function_name,
                 ),
@@ -44,7 +44,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
                     .include_llvm_ir
                     .unwrap_or(false)
                 {
-                    Some(generate_llvm_file_path(
+                    Some(llvm_file_store_filepath(
                         input_module_path,
                         &processed_module.function_name,
                     ))
@@ -52,7 +52,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
                     None
                 },
                 log_file: if processed_module.rust_hls_args.include_logs.unwrap_or(false) {
-                    Some(generate_log_file_path(
+                    Some(log_file_store_filepath(
                         input_module_path,
                         &processed_module.function_name,
                     ))
@@ -61,7 +61,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
                 },
                 function_name: processed_module.function_name.clone(),
                 #[cfg(feature = "verilator")]
-                verilated_cpp_file: generate_verilated_cpp_file_path(
+                verilated_cpp_file: verilator_shim_file_path(
                     input_module_path,
                     &processed_module.function_name,
                 ),
@@ -69,7 +69,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
         }
     }
 
-    let rust_hls = processed_module.to_rust_hls();
+    let rust_hls = RustHls::from(&processed_module);
 
     let result = rust_hls.execute()?;
 
@@ -89,12 +89,12 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
     )?;
 
     let verilog_file = CrateFile {
-        path: generate_verilog_file_path(input_module_path, &processed_module.function_name),
+        path: verilog_file_store_filepath(input_module_path, &processed_module.function_name),
         content: result.verilog,
     };
     let log_file = if processed_module.rust_hls_args.include_logs.unwrap_or(false) {
         Some(CrateFile {
-            path: generate_log_file_path(input_module_path, &processed_module.function_name),
+            path: log_file_store_filepath(input_module_path, &processed_module.function_name),
             content: result.log,
         })
     } else {
@@ -106,7 +106,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
         .unwrap_or(false)
     {
         Some(CrateFile {
-            path: generate_llvm_file_path(input_module_path, &processed_module.function_name),
+            path: llvm_file_store_filepath(input_module_path, &processed_module.function_name),
             content: result.llvm,
         })
     } else {
@@ -120,6 +120,7 @@ pub fn perform_hls(module: &MacroModule) -> Result<PerformHlsResult, PerformHlsE
 
     return Ok(PerformHlsResult::New {
         synthesized_file: files.0,
+        source_path: module.absolute_module_path.clone(),
         verilog_file: verilog_file,
         llvm_file: llvm_file,
         log_file: log_file,

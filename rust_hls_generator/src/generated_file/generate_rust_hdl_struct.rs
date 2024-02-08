@@ -3,8 +3,7 @@ use extract_rust_hdl_interface::{extract_rust_hdl_interface, Direction, SignalTy
 use proc_macro2::Ident;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
-use rust_hls_core::generate_verilated_cpp_file_path;
-use rust_hls_executor::CrateFile;
+use rust_hls_core::{verilator_shim_file_path, CrateFile};
 use rust_hls_verilator_shim::generate_verilator_shim_from_rusthdl_module;
 use thiserror::Error;
 
@@ -74,7 +73,7 @@ pub struct GenerateRustHdlStructResult {
     pub rust_file: syn::File,
 
     #[cfg(feature = "verilator")]
-    pub cpp_shim: rust_hls_executor::CrateFile,
+    pub cpp_shim: CrateFile,
 }
 
 #[cfg(feature = "verilator")]
@@ -388,7 +387,7 @@ pub fn generate_rust_hdl_struct(
         }
     ))?;
 
-    let cpp_path = generate_verilated_cpp_file_path(source_module_path, function_name);
+    let cpp_path = verilator_shim_file_path(source_module_path, function_name);
 
     return Ok(GenerateRustHdlStructResult {
         rust_file: token_stream,

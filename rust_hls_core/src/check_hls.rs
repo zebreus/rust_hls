@@ -1,16 +1,10 @@
-use std::path::PathBuf;
-
-use crate::{
-    generated_file::{
-        generate_llvm_file_path, generate_log_file_path, generate_output_filename,
-        generate_verilated_cpp_file_path, generate_verilog_file_path,
-    },
-    process_module::process_module,
-};
-use rust_hls_executor::CrateFile;
-
 use super::{find_modules::MacroModule, process_module::ProcessModuleError};
-
+use crate::CrateFile;
+use crate::{
+    llvm_file_store_filepath, log_file_store_filepath, process_module::process_module,
+    synthesized_module_filepath, verilator_shim_file_path, verilog_file_store_filepath,
+};
+use std::path::PathBuf;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -26,6 +20,7 @@ pub enum CheckHlsError {
 pub enum PerformHlsResult {
     Cached {
         synthesized_file: PathBuf,
+        source_path: Vec<String>,
         verilog_file: PathBuf,
         llvm_file: Option<PathBuf>,
         log_file: Option<PathBuf>,
@@ -36,6 +31,7 @@ pub enum PerformHlsResult {
     New {
         /// The generated verilog module
         synthesized_file: CrateFile,
+        source_path: Vec<String>,
         verilog_file: CrateFile,
         llvm_file: Option<CrateFile>,
         log_file: Option<CrateFile>,
@@ -98,7 +94,7 @@ impl PerformHlsResult {
     }
 }
 
-/// Check if HLS has been performed on a given list of modules
+/// Check if HLS has been performed for a given module
 pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError> {
     let processed_module: crate::ProcessedModule = process_module(&module)?;
     let new_hash = processed_module.calculate_hash();
@@ -118,8 +114,9 @@ pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError
     }
 
     return Ok(PerformHlsResult::Cached {
-        synthesized_file: generate_output_filename(input_module_path),
-        verilog_file: generate_verilog_file_path(
+        synthesized_file: synthesized_module_filepath(input_module_path),
+        source_path: module.absolute_module_path.clone(),
+        verilog_file: verilog_file_store_filepath(
             input_module_path,
             &processed_module.function_name,
         ),
@@ -128,7 +125,7 @@ pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError
             .include_llvm_ir
             .unwrap_or(false)
         {
-            Some(generate_llvm_file_path(
+            Some(llvm_file_store_filepath(
                 input_module_path,
                 &processed_module.function_name,
             ))
@@ -136,7 +133,7 @@ pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError
             None
         },
         log_file: if processed_module.rust_hls_args.include_logs.unwrap_or(false) {
-            Some(generate_log_file_path(
+            Some(log_file_store_filepath(
                 input_module_path,
                 &processed_module.function_name,
             ))
@@ -145,7 +142,7 @@ pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError
         },
         function_name: processed_module.function_name.clone(),
         #[cfg(feature = "verilator")]
-        verilated_cpp_file: generate_verilated_cpp_file_path(
+        verilated_cpp_file: verilator_shim_file_path(
             input_module_path,
             &processed_module.function_name,
         ),
@@ -153,79 +150,3 @@ pub fn check_hls(module: &MacroModule) -> Result<PerformHlsResult, CheckHlsError
 }
 
 // TODO: Add test for check hls
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//     use quote::quote;
-
-//     #[test]
-//     fn hls_seems_to_work_on_simple_example() {
-//         let module = MacroModule::new_for_tests(
-//             quote!(
-//                 #[hls]
-//                 mod toast {
-//                     #[hls]
-//                     #[no_mangle]
-//                     pub extern "C" fn add(a: u32, b: u32) -> u32 {
-//                         a + b
-//                     }
-//                 }
-//             ),
-//             "src/lib.rs",
-//         )
-//         .0;
-
-//         perform_hls(&module).unwrap();
-//     }
-
-//     #[test]
-//     fn hls_can_output_llvm_ir() {
-//         let module = MacroModule::new_for_tests(
-//             quote!(
-//                 #[hls]
-//                 mod toast {
-//                     #[hls(include_llvm_ir)]
-//                     #[no_mangle]
-//                     pub extern "C" fn add(a: u32, b: u32) -> u32 {
-//                         a + b
-//                     }
-//                 }
-//             ),
-//             "src/lib.rs",
-//         )
-//         .0;
-
-//         let result = perform_hls(&module).unwrap();
-//         assert_eq!(result.llvm_file_path().is_some(), true);
-//     }
-
-//     #[test]
-//     fn hls_seems_to_create_synthesized_output() {
-//         let module = MacroModule::new_for_tests(
-//             quote!(
-//                 #[hls]
-//                 mod toast {
-//                     #[hls]
-//                     #[no_mangle]
-//                     pub extern "C" fn add(a: u32, b: u32) -> u32 {
-//                         a + b
-//                     }
-//                 }
-//             ),
-//             "src/lib.rs",
-//         )
-//         .0;
-
-//         perform_hls(&module).unwrap();
-//         // assert_eq!(result.len(), 1);
-//         // assert_eq!(
-//         //     result[0].path.to_str().unwrap(),
-//         //     format!(
-//         //         "src/{}.rs",
-//         //         rust_hls_macro_lib::synthesized_module_name("toast")
-//         //     )
-//         // );
-//         // assert!(result[0].content.contains("pub struct Add"));
-//         // assert!(result[0].content.contains("Code created using PandA"));
-//     }
-// }

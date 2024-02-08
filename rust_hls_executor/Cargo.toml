@@ -21,3 +21,4 @@ serde = "1.0.160"
 thiserror = "1.0.40"
 toml = "0.7.3"
 rust_hls_macro_lib.workspace = true
+rust_hls_core.workspace = true

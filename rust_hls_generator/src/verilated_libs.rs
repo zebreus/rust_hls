@@ -7,8 +7,8 @@ use std::{
 };
 
 use glob::PatternError;
-use rust_hls_core::{get_verilated_libs_path, get_verilated_module_path};
-use rust_hls_executor::{calculate_hash, CrateFile};
+use itertools::Itertools;
+use rust_hls_core::{calculate_hash, verilated_libs_directory, CrateFile};
 use rust_hls_verilator::{verilate_module, ObtainVerilatorLibsError, VerilateModuleError};
 use thiserror::Error;
 
@@ -32,45 +32,30 @@ pub enum PlaceVerilatedModuleError {
     PatternError(#[from] PatternError),
 }
 
-/// Place the verilated libs in the crate root.
+/// Place the verilator libs in the verilated_libs_directory in crate_root
 pub fn place_verilated_libs_in_crate(crate_root: &Path) -> Result<(), PlaceVerilatedLibsError> {
-    let verilated_libs_path = get_verilated_libs_path(crate_root);
-
-    place_verilated_libs(&verilated_libs_path)
-}
-
-/// Place the verilator libs in the given directory.
-fn place_verilated_libs(path: &Path) -> Result<(), PlaceVerilatedLibsError> {
-    let verilator_libs_path = path;
-
-    if verilator_libs_path.exists() {
+    if crate_root.join(verilated_libs_directory()).exists() {
         return Ok(());
     }
 
-    create_dir_all(verilator_libs_path)?;
+    eprintln!("Crateroot: {:?}", crate_root);
 
     let verilated_libs = rust_hls_verilator::obtain_verilator_libs()?;
 
-    let result: Result<Vec<()>, PlaceVerilatedLibsError> = verilated_libs
+    eprintln!(
+        "Got files: {:?}",
+        verilated_libs.iter().map(|f| &f.path).collect_vec()
+    );
+
+    let result: Result<_, io::Error> = verilated_libs
         .into_iter()
-        .map(|file| -> Result<(), PlaceVerilatedLibsError> {
-            let target_path = verilator_libs_path.join(file.path);
-            let target_dir = target_path.parent().ok_or(
-                PlaceVerilatedLibsError::VerilatedLibFileHasInvalidPath(
-                    target_path.to_string_lossy().to_string(),
-                ),
-            )?;
-
-            create_dir_all(target_dir)?;
-
-            Ok(std::fs::write(target_path, file.content)?)
-        })
+        .map(|file| -> Result<(), io::Error> { file.write_to_crate(crate_root) })
         .collect();
 
-    match result {
-        Ok(_) => Ok(()),
-        Err(e) => Err(e)?,
-    }
+    // eprintln!("Got result: {:?}", result);
+
+    result?;
+    return Ok(());
 }
 
 pub fn read_hash_file(path: &Path) -> Option<String> {
@@ -89,9 +74,8 @@ pub fn write_hash_file(path: &Path, new_hash: &str) -> Result<(), io::Error> {
 pub fn place_verilated_module(
     verilog_file: &CrateFile,
     top_module: &str,
+    target_directory: &Path,
 ) -> Result<(), PlaceVerilatedModuleError> {
-    let target_directory = get_verilated_module_path(&verilog_file.path)?;
-
     let new_hash = calculate_hash(&vec![verilog_file.content.clone()]);
     let previous_hash = read_hash_file(&target_directory);
 
@@ -134,9 +118,9 @@ mod tests {
 
         let target_dir = dir.path().join("output");
 
-        place_verilated_libs(&target_dir).unwrap();
+        place_verilated_libs_in_crate(&target_dir).unwrap();
 
-        let files = read_dir(&target_dir).unwrap();
+        let files = read_dir(&target_dir.join(verilated_libs_directory())).unwrap();
 
         assert!(files.count() > 4);
 
@@ -177,14 +161,14 @@ mod tests {
         };
         file.write().unwrap();
 
-        place_verilated_module(&file, "counter").unwrap();
+        let target_directory = dir.path().join("verilated_module");
 
-        let files = read_dir(&dir.path().join("verilated_module")).unwrap();
+        place_verilated_module(&file, "counter", &target_directory).unwrap();
+
+        let files = read_dir(&target_directory).unwrap();
         let count = files.count();
-        println!("path: {}", dir.path().as_os_str().to_str().unwrap());
 
         assert!(count > 4);
-
         dir.close().unwrap();
     }
 
@@ -192,11 +176,12 @@ mod tests {
     fn skips_placing_verilated_lib_into_existing_directory() {
         let dir = TempDir::new().unwrap();
 
-        let target_dir = dir.path();
+        let crate_root = dir.path();
+        create_dir_all(crate_root.join(verilated_libs_directory())).unwrap();
 
-        place_verilated_libs(&target_dir).unwrap();
+        place_verilated_libs_in_crate(&crate_root).unwrap();
 
-        let files = read_dir(&target_dir).unwrap();
+        let files = read_dir(&crate_root.join(verilated_libs_directory())).unwrap();
 
         assert_eq!(files.count(), 0);
 

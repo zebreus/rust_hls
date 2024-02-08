@@ -11,6 +11,7 @@ use std::{
 
 use cargo_toml::Manifest;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use rust_hls_core::{CrateFile, ProcessedModule};
 use serde::Serialize;
 
 use crate::{
@@ -44,34 +45,6 @@ pub enum RustHlsError {
     FailedToAccessWorkspacePackage,
 }
 
-#[derive(Debug, Clone, Serialize, Hash)]
-pub struct CrateFile {
-    /// The path of the file relative to the crate root
-    pub path: PathBuf,
-    /// The content of the file
-    pub content: String,
-}
-
-impl CrateFile {
-    pub fn new(path: PathBuf, content: String) -> Self {
-        Self { path, content }
-    }
-    pub fn from_file(path: PathBuf) -> Result<Self, io::Error> {
-        Ok(Self {
-            path: path.clone(),
-            content: read_to_string(path)?,
-        })
-    }
-    pub fn write(&self) -> Result<(), io::Error> {
-        let parent = self.path.parent().ok_or(std::io::Error::new(
-            std::io::ErrorKind::Other,
-            "Failed to get parent directory",
-        ))?;
-        fs::create_dir_all(parent)?;
-        write(&self.path, &self.content)
-    }
-}
-
 /// The HLS process is instrumented and controlled by this struct.
 ///
 /// You can create a new instance of this struct using the `new` function.
@@ -80,6 +53,13 @@ impl CrateFile {
 pub struct RustHls {
     /// List of all files in the temporary crate
     files: Vec<CrateFile>,
+}
+impl From<&ProcessedModule> for RustHls {
+    fn from(processed_module: &ProcessedModule) -> Self {
+        let files = processed_module.get_files();
+
+        return RustHls::new(files);
+    }
 }
 
 pub struct RustHlsResult {

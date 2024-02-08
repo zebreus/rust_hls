@@ -605,15 +605,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
-name = "multiple_modules"
-version = "0.2.0"
-dependencies = [
- "rust-hdl",
- "rust_hls",
- "rust_hls_macro",
-]
-
-[[package]]
 name = "multiplier"
 version = "0.2.0"
 dependencies = [
@@ -1052,6 +1043,7 @@ name = "rust_hls_core"
 version = "0.2.0"
 dependencies = [
  "cargo_toml",
+ "convert_case",
  "darling",
  "fs_extra",
  "glob",
@@ -1060,7 +1052,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "regex",
- "rust_hls_executor",
  "rust_hls_macro",
  "rust_hls_macro_lib",
  "rust_hls_script_generator",
@@ -1081,6 +1072,7 @@ dependencies = [
  "fs_extra",
  "fslock",
  "rand",
+ "rust_hls_core",
  "rust_hls_macro_lib",
  "rust_hls_script_generator",
  "serde",
@@ -1116,6 +1108,7 @@ dependencies = [
  "darling",
  "proc-macro2",
  "quote",
+ "rust_hls_core",
  "rust_hls_macro_lib",
  "tempfile",
  "thiserror",
@@ -1155,6 +1148,7 @@ dependencies = [
 name = "rust_hls_verilator"
 version = "0.2.0"
 dependencies = [
+ "rust_hls_core",
  "rust_hls_executor",
  "rust_hls_tools",
  "tempfile",
@@ -1169,8 +1163,8 @@ dependencies = [
  "fnv",
  "proc-macro2",
  "quote",
+ "rust_hls_core",
  "rust_hls_macro",
- "rust_hls_macro_lib",
  "syn 2.0.26",
  "thiserror",
 ]

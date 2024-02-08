@@ -42,7 +42,7 @@ rust_hls_macro_lib.workspace = true
 spanned_error_message.workspace = true
 darling = "0.20.1"
 rust_hls_script_generator.workspace = true
-rust_hls_executor.workspace = true
+convert_case = "0.6.0"
 
 [dev-dependencies]
 rust_hls_macro.workspace = true

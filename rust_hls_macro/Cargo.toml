@@ -23,6 +23,7 @@ darling = "0.20.1"
 proc-macro2 = { version = "1.0.56", features = ["span-locations"] }
 quote = { version = "1.0.26" }
 rust_hls_macro_lib.workspace = true
+rust_hls_core.workspace = true
 tempfile = "3.5.0"
 thiserror = "1.0.40"
 

@@ -1,17 +1,14 @@
-use std::path::PathBuf;
-
-use crate::darling_error_outside_macro::DarlingErrorOutsideMacro;
-use rust_hls_executor::{calculate_hash, CrateFile, RustHls};
-use rust_hls_script_generator::{generate_hls_script, GenerateHlsOptions};
-
 use super::find_modules::MacroModule;
+use crate::{calculate_hash, darling_error_outside_macro::DarlingErrorOutsideMacro, CrateFile};
 use rust_hls_macro_lib::{parse_hls_macro_module, HlsArguments};
+use rust_hls_script_generator::{generate_hls_script, GenerateHlsOptions};
+use std::path::PathBuf;
 use thiserror::Error;
-mod get_available_dependencies;
-pub use get_available_dependencies::*;
 mod generate_cargo_toml;
-pub use generate_cargo_toml::*;
+mod get_available_dependencies;
 mod make_function_no_mangle;
+pub use generate_cargo_toml::*;
+pub use get_available_dependencies::*;
 pub use make_function_no_mangle::*;
 
 #[derive(Error, Debug)]
@@ -71,15 +68,6 @@ impl ProcessedModule {
         let files = self.get_files();
         let hash = calculate_hash(&files);
         return hash;
-    }
-
-    // TODO: Refactor rust hls args and GenerateHlsOptions
-
-    pub fn to_rust_hls(&self) -> RustHls {
-        let files = self.get_files();
-
-        let rust_hls = RustHls::new(files);
-        return rust_hls;
     }
 }
 

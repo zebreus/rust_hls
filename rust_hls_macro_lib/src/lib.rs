@@ -3,15 +3,12 @@
 //! This basically contains all functions related to parsing the HLS macros from files. These functions are shared between the macro and the buildscript so they both parse in the same way and produce the same error messages.
 //!
 //! This crate uses darling::Error as its error type, because that supports bundling errors and span information.
-mod generate_names;
 mod hls_macro_helpers;
 mod make_content_compile;
 mod parse_arguments;
 mod parse_content;
 mod parse_module;
 
-pub use generate_names::synthesized_module_name;
-pub use generate_names::synthesized_struct_name;
 pub use parse_content::parse_hls_macro_content;
 pub use parse_module::check_nested_macros;
 pub use parse_module::check_super;

@@ -1,8 +1,6 @@
 //! This module provides a function to extract the verilated library files from the docker image.
 
-// docker run --rm -it zebreus/rust_hls_tools verilator_bin --getenv VERILATOR_ROOT
-
-use rust_hls_executor::CrateFile;
+use rust_hls_core::{verilated_libs_directory, CrateFile};
 use rust_hls_tools::{RustHlsCommand, RustHlsCommandError};
 use std::{
     fs::{create_dir_all, read_dir},
@@ -21,6 +19,9 @@ pub enum ObtainVerilatorLibsError {
     RustHlsCommandError(#[from] RustHlsCommandError),
 }
 
+/// Obtain the verilator libs files
+///
+/// The path corresponds to the correct path inside the crate
 pub fn obtain_verilator_libs() -> Result<Vec<CrateFile>, ObtainVerilatorLibsError> {
     let dir = TempDir::new()?;
 
@@ -68,15 +69,18 @@ fn copy_from_container(output_directory: &PathBuf) -> Result<(), ObtainVerilator
     return Ok(());
 }
 
-fn collect_results(directory: &PathBuf) -> Result<Vec<CrateFile>, ObtainVerilatorLibsError> {
-    let root_files = read_dir(directory)?;
-    let vltstd_files = read_dir(directory.join("vltstd"))?;
+/// Copy
+fn collect_results(
+    system_verilated_libs_directory: &PathBuf,
+) -> Result<Vec<CrateFile>, ObtainVerilatorLibsError> {
+    let root_files = read_dir(system_verilated_libs_directory)?;
+    let vltstd_files = read_dir(system_verilated_libs_directory.join("vltstd"))?;
 
     let all_files = root_files.chain(vltstd_files);
 
     // let all_files = read_dir(directory.join("vltstd"))?;
 
-    let extra_modules = all_files.filter_map(|entry| match entry {
+    let verilated_libs_files = all_files.filter_map(|entry| match entry {
         Ok(path) => {
             let Ok(file_type) = path.file_type() else {
                 return None;
@@ -86,20 +90,19 @@ fn collect_results(directory: &PathBuf) -> Result<Vec<CrateFile>, ObtainVerilato
             }
             Some(
                 path.path()
-                    .strip_prefix(&directory)
+                    .strip_prefix(&system_verilated_libs_directory)
                     .unwrap()
-                    .to_string_lossy()
-                    .to_string(),
+                    .to_owned(),
             )
         }
         Err(_) => None,
     });
 
-    let files = extra_modules
+    let files = verilated_libs_files
         .map(|file| -> Result<CrateFile, ObtainVerilatorLibsError> {
-            let content = std::fs::read_to_string(&directory.join(&file))?;
+            let content = std::fs::read_to_string(&system_verilated_libs_directory.join(&file))?;
             Ok(CrateFile {
-                path: PathBuf::from(file),
+                path: verilated_libs_directory().join(file),
                 content: content,
             })
         })

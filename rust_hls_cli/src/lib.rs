@@ -17,6 +17,10 @@ struct Cli {
     /// Remove all generated files
     #[arg(short, long)]
     clean: bool,
+
+    /// Only check if generating is necessary
+    #[arg(long)]
+    check: bool,
 }
 
 pub fn main() {

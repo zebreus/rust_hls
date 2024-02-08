@@ -26,7 +26,7 @@ syn = { version = "2.0.18", features = [
 ], default-features = false }
 quote = { version = "1.0.28", default-features = false }
 fnv = "1.0.7"
-rust_hls_macro_lib.workspace = true
+rust_hls_core.workspace = true
 extract_rust_hdl_interface.workspace = true
 
 [dev-dependencies]

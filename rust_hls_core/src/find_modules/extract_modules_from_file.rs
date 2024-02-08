@@ -1,20 +1,16 @@
+use crate::{
+    darling_error_outside_macro::DarlingErrorOutsideMacro, extract_file_hash,
+    filename_to_module_path, synthesized_module_filepath, ExtractHashError, ExtractModulePathError,
+};
 use itertools::Itertools;
 use rust_hls_macro_lib::{extract_hls_macro, HlsArguments};
+use serde::Serialize;
 use std::{
     fs::{self},
     path::PathBuf,
 };
 use syn::Item;
 use thiserror::Error;
-
-use crate::{
-    darling_error_outside_macro::DarlingErrorOutsideMacro,
-    generated_file::{
-        extract_file_hash, filename_to_module_path, generate_output_filename, ExtractHashError,
-        ExtractModulePathError,
-    },
-};
-use serde::Serialize;
 
 #[derive(Error, Debug)]
 pub enum ExtractModuleError {
@@ -183,7 +179,7 @@ fn extract_module_from_item(
             };
 
             let input_module_path = filename_to_module_path(&file, &current_module_path)?;
-            let output_file = generate_output_filename(&input_module_path);
+            let output_file = synthesized_module_filepath(&input_module_path);
             let output_file_content = std::fs::read_to_string(crate_root.join(&output_file));
 
             let previous_hash = match output_file_content {

@@ -16,8 +16,10 @@ pub mod perform_hls;
 // #[cfg(feature = "verilator")]
 // pub use generate_verilator_shim::*;
 
-use rust_hls_core::{find_modules, FindModulesError, PerformHlsResult, ProcessModuleError};
-use rust_hls_executor::CrateFile;
+use rust_hls_core::{
+    find_modules, verilated_module_directory, CrateFile, FindModulesError, PerformHlsResult,
+    ProcessModuleError,
+};
 use thiserror::Error;
 
 use crate::verilated_libs::place_verilated_module;
@@ -91,10 +93,14 @@ pub fn generator_hls(root: &PathBuf) -> Result<(), HlsGeneratorError> {
         {
             let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
 
-            let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
+            let verilog_crate_file = CrateFile::from_file(&root.join(verilog_file))?;
             let top_module = result.function_name();
 
-            place_verilated_module(&verilog_crate_file, top_module)?;
+            place_verilated_module(
+                &verilog_crate_file,
+                top_module,
+                &root.join(verilated_module_directory(&module.absolute_module_path)),
+            )?;
         }
     }
 

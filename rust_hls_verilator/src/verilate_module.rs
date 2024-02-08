@@ -1,6 +1,6 @@
 //! Contains the `verilate_module` function, which runs Verilator on a given Verilog file
 
-use rust_hls_executor::CrateFile;
+use rust_hls_core::CrateFile;
 use rust_hls_tools::{RustHlsCommand, RustHlsCommandError};
 use std::{
     fs::{create_dir_all, read_dir},

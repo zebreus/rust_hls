@@ -1,17 +1,15 @@
 mod generate_cached_path;
+
 use fs_extra::dir::{copy, CopyOptions};
+pub use generate_cached_path::get_cache_path;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use rust_hls_core::{calculate_hash, CrateFile};
 use std::{
     fs::{self, OpenOptions},
     io::{self, Write},
     path::PathBuf,
 };
-
 use thiserror::Error;
-
-pub use generate_cached_path::get_cache_path;
-
-use crate::{calculate_hash, rust_hls::CrateFile};
 
 #[derive(Error, Debug)]
 pub enum CachingError {

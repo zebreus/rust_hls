@@ -1,4 +1,4 @@
-//! Functions for converting between rust module paths and file paths.
+//! Helper functions for converting between rust module paths and file paths.
 
 use itertools::Itertools;
 use std::path::{Component, PathBuf};

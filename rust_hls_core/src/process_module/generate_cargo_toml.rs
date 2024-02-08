@@ -1,14 +1,11 @@
+use crate::CrateFile;
+use cargo_toml::{Dependency, Manifest};
+use serde::Serialize;
 use std::{
     collections::{BTreeMap, HashSet},
     path::PathBuf,
 };
-
-use cargo_toml::{Dependency, Manifest};
-use serde::Serialize;
-
 use thiserror::Error;
-
-use rust_hls_executor::CrateFile;
 
 #[derive(Error, Debug)]
 pub enum GenerateCargoTomlFromManifestError {

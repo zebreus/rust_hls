@@ -2,10 +2,8 @@ use std::collections::HashSet;
 
 use proc_macro2::TokenStream;
 use quote::quote;
-use rust_hls_macro_lib::{
-    make_content_compile, parse_hls_macro_args, parse_hls_macro_content, synthesized_module_name,
-    synthesized_struct_name,
-};
+use rust_hls_core::{synthesized_module_name, synthesized_struct_name};
+use rust_hls_macro_lib::{make_content_compile, parse_hls_macro_args, parse_hls_macro_content};
 
 pub fn hls_wrapped(
     args: proc_macro2::TokenStream,

@@ -13,4 +13,5 @@ description = "The part of rust_hls that is responsible for running verilator to
 thiserror = "1.0.40"
 tempfile = "3.6.0"
 rust_hls_executor.workspace = true
+rust_hls_core.workspace = true
 rust_hls_tools.workspace = true

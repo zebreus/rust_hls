@@ -1,10 +1,8 @@
 use crate::compile_verilated_libs::CompileVerilatedLibsError;
 use rust_hls_core::{
-    find_modules, get_verilated_libs_path, get_verilated_module_path,
-    perform_hls::{check_hls, CheckHlsError},
-    FindModulesError,
+    check_hls::{check_hls, CheckHlsError},
+    find_modules, verilated_libs_directory, verilated_module_directory, FindModulesError,
 };
-use rust_hls_executor::CrateFile;
 use std::{io, path::PathBuf};
 use thiserror::Error;
 
@@ -39,7 +37,7 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
         return Ok(());
     }
 
-    let mut compiler = Compiler::new(&get_verilated_libs_path(&root));
+    let mut compiler = Compiler::new(&root.join(verilated_libs_directory()));
 
     for module in found_modules {
         let source_file = module.source_file.to_string_lossy().to_string();
@@ -48,12 +46,8 @@ pub fn buildscript_hls(root: &PathBuf) -> Result<(), HlsBuildscriptError> {
 
         let result = check_hls(&module)?;
 
-        let verilog_file = result.verilog_file_path().to_string_lossy().to_string();
-
-        let verilog_crate_file = CrateFile::from_file(root.join(verilog_file))?;
-
         compiler.add_verilated_module(
-            &get_verilated_module_path(&verilog_crate_file.path)?,
+            &verilated_module_directory(&module.absolute_module_path),
             &root.join(result.verilated_cpp_file_path()),
         );
     }
