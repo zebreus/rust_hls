@@ -16,6 +16,7 @@ packages=(
     "rust_hls_macro_lib"
     "rust_hls_script_generator"
     "rust_hls_tools"
+    "rust_hls_generator"
     "rust_hls_verilator"
     "rust_hls_verilator_shim"
     "spanned_error_message"
@@ -25,7 +26,7 @@ packages=(
 for package in "${packages[@]}"; do
     cd $package
     package_name=$(basename $package)
-    cat <<EOF >README
+    cat <<EOF >README.md
 # $package_name
 
 <!-- cargo-rdme -->
