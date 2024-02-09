@@ -17,7 +17,13 @@
 //!
 //! There are probably lots of bugs in the code.
 mod generate_hls_script;
+mod generate_llvm;
 
-pub use generate_hls_script::{
-    generate_hls_script, GenerateHlsOptions, DEFAULT_HLS_FLAGS, DEFAULT_RUST_FLAGS,
+pub use generate_hls_script::{generate_hls_script, GenerateHlsOptions, DEFAULT_HLS_FLAGS};
+
+pub use generate_llvm::{
+    generate_llvm, GenerateLlvmError, GenerateLlvmOptions, DEFAULT_RUST_FLAGS,
 };
+
+#[cfg(test)]
+pub use generate_llvm::generate_llvm_for_tests;

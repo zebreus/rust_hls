@@ -1134,6 +1134,7 @@ dependencies = [
  "fs_extra",
  "rust_hls_macro_lib",
  "tempfile",
+ "thiserror",
 ]
 
 [[package]]

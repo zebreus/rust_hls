@@ -7,29 +7,22 @@ pub struct GenerateHlsOptions {
     pub hls_arguments: HlsArguments,
 }
 
-/// These flags will be used when compiling the extracted crate to LLVM IR.
-pub const DEFAULT_RUST_FLAGS: &str = r#"-C overflow-checks=off -C no-vectorize-loops -C target-cpu=generic -C panic=abort -C llvm-args=--opaque-pointers=false"#;
-// LTO seems broken without opaque pointers  -C linker-plugin-lto=on -C embed-bitcode=on -C lto=fat. Provides no benefit anyway as we are linking manually.
-
 /// These flags will be used when performing HLS from the generated LLVM IR.
 pub const DEFAULT_HLS_FLAGS: &str = r#"--compiler=I386_CLANG16"#;
 
-/// Generate the contents of the HLS script.
+/// Return a shell script that generates verilog based on a LLVM file
 ///
-/// The created script should be executed from a crate directory, that contains the crate described in the options.
-///
-/// The script will generate a result.v file in the crate directory containing the synthesized Verilog code.
+/// The script will be named `generate_verilog.sh` and placed at the root of the extracted crate.
+/// The LLVM should be read from a file named `result.ll` at the crate root
+/// It will be executed without arguments.
+/// The script should generate a `result.v` verilog file at the crate root.
+/// Any stdout logs should be written to a `stdout.log` file at the crate root.
+/// Any stderr logs should be written to a `stderr.log` file at the crate root.
 pub fn generate_hls_script(options: &GenerateHlsOptions) -> String {
     let GenerateHlsOptions {
         function_name,
         hls_arguments,
     } = options;
-
-    let rust_flags = match hls_arguments.skip_default_rust_flags.unwrap_or(false) {
-        true => String::new(),
-        false => DEFAULT_RUST_FLAGS.into(),
-    }
-    .add(&hls_arguments.rust_flags());
 
     let hls_flags = match hls_arguments.skip_default_bambu_flags.unwrap_or(false) {
         true => String::new(),
@@ -38,51 +31,10 @@ pub fn generate_hls_script(options: &GenerateHlsOptions) -> String {
     .add(&hls_arguments.bambu_flags());
 
     let bambu_docker = format!(
-        r#"docker run --rm -i -v "$(pwd):$(pwd)" -v "$WORKSPACE_LOCATION/target:$WORKSPACE_LOCATION/target" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest"#
+        r#"docker run --rm -i -v "$(pwd):$(pwd)" --workdir=$(pwd) --user $(id -u):$(id -g) zebreus/rust_hls_tools:latest"#
     );
 
     let bambu_command = format!(r#"{bambu_docker} bambu"#);
-    let llvm_link_command = format!(r#"{bambu_docker} llvm-link"#);
-    let llvm_extract_command = format!(r#"{bambu_docker} llvm-extract"#);
-    let llvm_opt_command = format!(r#"{bambu_docker} opt"#);
-    let llvm_dis_command = format!(r#"{bambu_docker} llvm-dis"#);
-    let jq_command = format!(r#"{bambu_docker} jq"#);
-
-    let llvm_opt_flags = hls_arguments.llvm_opt_flags();
-    let llvm_extract_command = format!(
-        "{llvm_extract_command} --opaque-pointers=false --recursive --keep-const-init --func={function_name}"
-    );
-
-    let llvm_opt_command_with_pipe = match llvm_opt_flags {
-        Some(flags) => {
-            format!(
-                " {llvm_opt_command} --opaque-pointers=false {flags} | {llvm_extract_command} | "
-            )
-        }
-        None => String::new(),
-    };
-
-    let create_llvm_command = format!(
-        r#"
-CRATE_NAME=$(grep -oP '(?<=name = ")[^"]*' Cargo.toml)
-CRATE_NAME_UNDERSCORED=$(echo $CRATE_NAME | tr '-' '_')
-echo "Executing synthesis in $(pwd)" 1>&2
-WORKSPACE_LOCATION="$(dirname $(cargo locate-project --message-format plain --workspace))"
-export RUSTFLAGS='--emit=llvm-bc {rust_flags}'
-LLVM_BITCODE_FILES=($(cargo build --release -Z unstable-options --build-plan | {jq_command} '.invocations[].outputs[]' -r | grep -Po "^.*\.rlib$" | sed -E 's/lib([^\/]*)\.rlib/\1\.bc /' | tr -d '\n'))
-cargo build --release -Z unstable-options
-{llvm_link_command} --opaque-pointers=false "${{LLVM_BITCODE_FILES[@]}}"  | {llvm_extract_command} | {llvm_opt_command_with_pipe} {llvm_dis_command} --opaque-pointers=false -o result.ll
-cp result.ll {function_name}.ll
-# cp $WORKSPACE_LOCATION/target/release/deps/${{CRATE_NAME_UNDERSCORED}}-*.ll {function_name}.ll
-"#
-    );
-
-    let perform_hls_command = format!(
-        r#"
-{bambu_command} --simulator=VERILATOR result.ll --top-fname={function_name} --clock-name=clk {hls_flags}
-mv {function_name}.v result.v
-"#
-    );
 
     return String::from(format!(
         r#"
@@ -90,12 +42,10 @@ mv {function_name}.v result.v
 
 function main {{
 set -xe
-    
-# Compile to LLVM IR
-{create_llvm_command}
 
 # Perform HLS
-{perform_hls_command}
+{bambu_command} --simulator=VERILATOR result.ll --top-fname={function_name} --clock-name=clk {hls_flags}
+mv {function_name}.v result.v
 
 }}
 
@@ -108,6 +58,7 @@ main > >(tee -a stdout.log) 2> >(tee -a stderr.log 1>&2)
 #[cfg(test)]
 mod tests {
     use fs_extra::dir::{copy, CopyOptions};
+    use std::fs::remove_file;
     use std::process::Command;
     use std::{
         fs::File,
@@ -115,6 +66,8 @@ mod tests {
         path::Path,
     };
     use tempfile::TempDir;
+
+    use crate::{generate_llvm_for_tests, GenerateLlvmOptions};
 
     use super::*;
 
@@ -153,9 +106,15 @@ mod tests {
         let crate_path = dir.path().join("test_crate");
         let crate_name = "test_crate";
         let function_name = "add";
-
         let mut arguments = HlsArguments::default();
         arguments.bambu_flag.push("-v4".into());
+        generate_llvm_for_tests(&GenerateLlvmOptions {
+            function_name: function_name.into(),
+            hls_arguments: arguments.clone(),
+            prepared_crate_root: crate_path.clone(),
+        })
+        .unwrap();
+
         generate_hls_script_file(
             &crate_path,
             &GenerateHlsOptions {
@@ -200,6 +159,18 @@ mod tests {
         let crate_path = dir.path().join("test_crate");
         let function_name = "add";
 
+        generate_llvm_for_tests(&GenerateLlvmOptions {
+            function_name: function_name.into(),
+            hls_arguments: HlsArguments::default(),
+            prepared_crate_root: crate_path.clone(),
+        })
+        .unwrap();
+
+        let stdout_file = crate_path.join("stdout.log");
+        let stderr_file = crate_path.join("stderr.log");
+        remove_file(&stdout_file).unwrap();
+        remove_file(&stderr_file).unwrap();
+
         generate_hls_script_file(
             &crate_path,
             &GenerateHlsOptions {
@@ -218,9 +189,6 @@ mod tests {
         let exit_code = output.status.code().unwrap();
         assert_eq!(exit_code, 0);
 
-        let stdout_file = crate_path.join("stdout.log");
-        let stderr_file = crate_path.join("stderr.log");
-
         assert!(stdout_file.exists());
         assert!(stderr_file.exists());
 
@@ -229,6 +197,9 @@ mod tests {
 
         let stdout_from_file = std::fs::read_to_string(stdout_file).unwrap();
         let stderr_from_file = std::fs::read_to_string(stderr_file).unwrap();
+
+        let path = dir.into_path();
+        eprintln!("Keeping directory {:?}", path);
 
         assert_eq!(stdout, stdout_from_file);
         assert_eq!(stderr, stderr_from_file);

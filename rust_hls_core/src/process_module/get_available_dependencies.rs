@@ -16,6 +16,7 @@ pub enum GetDependenciesError {
     FailedToGenerateCargoToml(#[from] toml::ser::Error),
 }
 
+/// Extract all available dependencies from the cargo.toml file
 pub fn get_available_dependencies(
     cargo_toml: &String,
 ) -> Result<HashSet<String>, GetDependenciesError> {

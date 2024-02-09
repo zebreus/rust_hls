@@ -12,3 +12,4 @@ description = "The part of rust_hls that is responsible for generating bash scri
 tempfile = "3.6.0"
 rust_hls_macro_lib.workspace = true
 fs_extra = "1.3.0"
+thiserror = "1.0.40"
